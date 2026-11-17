@@ -234,14 +234,14 @@ dev = [
 ]
 
 [package.metadata]
-requires-dist = [{ name = "typer" }]
+requires-dist = [{ name = "typer", specifier = ">=0.29.1" }]
 
 [package.metadata.requires-dev]
 dev = [
-    { name = "mypy" },
-    { name = "pytest" },
-    { name = "pytest-cov" },
-    { name = "ruff" },
+    { name = "mypy", specifier = ">=2.4.1" },
+    { name = "pytest", specifier = ">=9.2.0" },
+    { name = "pytest-cov", specifier = ">=7.1.0" },
+    { name = "ruff", specifier = ">=0.17.5" },
 ]
 
 [[package]]

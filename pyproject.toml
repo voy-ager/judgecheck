@@ -4,7 +4,7 @@ version = "0.0.1"
 description = "Check whether your LLM-judge eval scores can be trusted."
 readme = "README.md"
 requires-python = ">=3.12"
-dependencies = ["typer"]
+dependencies = ["typer>=0.29.1"]
 
 [project.scripts]
 judgecheck = "judgecheck.cli:app"
@@ -17,12 +17,11 @@ build-backend = "hatchling.build"
 packages = ["src/judgecheck"]
 
 [dependency-groups]
-dev = ["pytest", "pytest-cov", "ruff", "mypy"]
+dev = ["pytest>=9.2.0", "pytest-cov>=7.1.0", "ruff>=0.17.5", "mypy>=2.4.1"]
 
 [tool.ruff]
 line-length = 100
 src = ["src", "tests"]
-extend-exclude = [".claude"]
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "B", "UP", "S", "SIM"]
