@@ -1,0 +1,1 @@
+"""DeepEval results adapter."""
