@@ -1,0 +1,26 @@
+[
+  {
+    "user_input":"When was the Eiffel Tower completed?",
+    "retrieved_contexts":[
+      "The Eiffel Tower, built for the 1889 World's Fair in Paris, was completed in March 1889. It is 330 metres tall including antennas."
+    ],
+    "response":"It was completed in March 1889.",
+    "faithfulness":1.0
+  },
+  {
+    "user_input":"How many moons does Mars have?",
+    "retrieved_contexts":[
+      "Mars has two small moons, Phobos and Deimos, discovered by Asaph Hall in 1877."
+    ],
+    "response":"Mars has two moons, Phobos and Deimos.",
+    "faithfulness":1.0
+  },
+  {
+    "user_input":"What is the refund window?",
+    "retrieved_contexts":[
+      "Customers may return unopened items within 30 days of delivery for a full refund. Opened items are eligible for store credit only."
+    ],
+    "response":"Unopened items can be returned within 30 days of delivery for a full refund.",
+    "faithfulness":1.0
+  }
+]
