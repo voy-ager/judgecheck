@@ -4,7 +4,10 @@ version = "0.0.1"
 description = "Check whether your LLM-judge eval scores can be trusted."
 readme = "README.md"
 requires-python = ">=3.12"
-dependencies = ["typer>=0.29.1"]
+dependencies = [
+    "pydantic>=2.14.3",
+    "typer>=0.29.1",
+]
 
 [project.scripts]
 judgecheck = "judgecheck.cli:app"
