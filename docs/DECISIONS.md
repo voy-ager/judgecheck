@@ -8,5 +8,5 @@
 | D4 | 2026-11-17 | "Position swap" probe becomes **context-order sensitivity** (shuffle retrieved passages, re-score) | Faithfulness scores one answer; there is no answer order to swap |
 | D5 | 2026-11-17 | Probes call DeepEval/Ragas metric functions directly (optional extras), not copied prompts | Probing must use the judge's real prompt to be valid |
 | D6 | 2026-11-17 | CI gate on kappa uses the bootstrap CI **lower bound** plus a minimum label count | 30 labels give intervals of about ±0.25; a point estimate would flap |
-| D7 | 2026-11-17 | Default judge `llama3.2` (3B) for the spike; larger local model only if the P0 smoke test shows it's usable on CPU | No GPU; repeat-run probes need many calls |
+| D7 | 2026-11-17 | Default judge `llama3.2` (3B) for the spike; larger local model only if the P0 smoke test shows it's usable on CPU | No GPU; repeat-run probes need many calls P0 smoke (#5, 20 items x2 runs, llama3.2 3B): latency median 5.0s/p90 5.3s, 0 parse failures, 0 flips, but it answered "fail" on all 40 calls (agreement 50% = chance, 20 false fails, 0 false passes), so it does not discriminate with this rubric; try a larger local model or a claim-by-claim prompt before relying on it. |
 | D8 | 2026-11-17 | One board (GitHub Project); ruflo for swarm, memory and claims only | Two boards double the token cost |
