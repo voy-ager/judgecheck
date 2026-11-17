@@ -1,0 +1,25 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+dist/
+build/
+*.egg-info/
+.ipynb_checkpoints/
+
+# Secrets / local
+.env
+.env.*
+*.local.json
+
+# Ruflo / agent runtime state (local only)
+.claude-flow/
+.swarm/
+.hive-mind/
+.claude/settings.local.json
+JudgeCheck brief.md
