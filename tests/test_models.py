@@ -118,3 +118,26 @@ def test_sha256_file(tmp_path: Path) -> None:
     p.write_bytes(data)
     assert sha256_file(p) == hashlib.sha256(data).hexdigest()
     assert sha256_file(str(p)) == sha256_file(p)
+
+
+@pytest.mark.parametrize("reason", [None, "", "   "])
+def test_failed_requires_failure_reason(reason: str | None) -> None:
+    with pytest.raises(ValidationError):
+        failed(failure_reason=reason)
+
+
+def test_ok_rejects_failure_reason() -> None:
+    with pytest.raises(ValidationError):
+        ok(failure_reason="boom")
+
+
+@pytest.mark.parametrize("eid", ["", "   "])
+def test_example_id_non_empty(eid: str) -> None:
+    with pytest.raises(ValidationError):
+        ok(example_id=eid)
+    with pytest.raises(ValidationError):
+        HumanLabel(example_id=eid, label="pass")
+
+
+def test_example_id_stripped() -> None:
+    assert ok(example_id=" e1 ").example_id == "e1"

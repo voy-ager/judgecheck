@@ -3,11 +3,12 @@
 import hashlib
 from datetime import UTC, datetime
 from pathlib import Path
-from typing import Literal, Self
+from typing import Annotated, Literal, Self
 
-from pydantic import AwareDatetime, BaseModel, ConfigDict, Field, model_validator
+from pydantic import AwareDatetime, BaseModel, ConfigDict, Field, StringConstraints, model_validator
 
 Verdict = Literal["pass", "fail"]
+ExampleId = Annotated[str, StringConstraints(strip_whitespace=True, min_length=1)]
 
 
 class _Frozen(BaseModel):
@@ -17,7 +18,7 @@ class _Frozen(BaseModel):
 class JudgeRecord(_Frozen):
     """One judge result. A failed judge call keeps score and verdict as None, never 0."""
 
-    example_id: str
+    example_id: ExampleId
     framework: Literal["deepeval", "ragas"]
     metric: str
     score: float | None = None
@@ -31,15 +32,19 @@ class JudgeRecord(_Frozen):
     @model_validator(mode="after")
     def _check_status(self) -> Self:
         if self.status == "failed":
+            if not (self.failure_reason and self.failure_reason.strip()):
+                raise ValueError("failed record must have a non-empty failure_reason")
             if self.score is not None or self.verdict is not None:
                 raise ValueError("failed record must have score=None and verdict=None")
         elif self.score is None or not 0.0 <= self.score <= 1.0:
             raise ValueError("ok record must have a score in [0, 1]")
+        elif self.failure_reason is not None:
+            raise ValueError("ok record must have failure_reason=None")
         return self
 
 
 class HumanLabel(_Frozen):
-    example_id: str
+    example_id: ExampleId
     label: Verdict
     labeller: str = "maintainer"
     note: str | None = None
