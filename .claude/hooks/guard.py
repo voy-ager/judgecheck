@@ -4,6 +4,7 @@ Exit code 2 blocks the tool call and shows the reason to Claude.
 """
 
 import json
+import os
 import re
 import shutil
 import subprocess
@@ -56,6 +57,16 @@ def current_branch(cwd: str | None) -> str:
         return ""
 
 
+PATH_ARG = r"(\"[^\"]+\"|'[^']+'|\S+)"
+
+
+def resolve(path: str, base: str | None) -> str:
+    """Resolve a cd/-C target the way the shell would, including /c/... Git Bash paths."""
+    path = path.strip("\"'")
+    path = re.sub(r"^/([a-zA-Z])/", r"\1:/", path)
+    return os.path.normpath(os.path.join(base or os.getcwd(), os.path.expanduser(path)))
+
+
 def check(command: str, cwd: str | None) -> str | None:
     for seg in SPLIT.split(command):
         seg = seg.strip()
@@ -64,9 +75,17 @@ def check(command: str, cwd: str | None) -> str | None:
         for pattern, reason in RULES:
             if re.search(pattern, seg):
                 return reason
+        cd = re.fullmatch(rf"(?:cd|Set-Location|pushd)\s+(?:-Path\s+)?{PATH_ARG}", seg)
+        if cd:
+            cwd = resolve(cd.group(1), cwd)
+            continue
         on_main = None
         if re.search(r"\bgit\b.*\b(commit|push)\b", seg):
-            on_main = current_branch(cwd) in ("main", "master")
+            if re.search(r"--git-dir|--work-tree", seg):
+                return "Use cd or git -C instead of --git-dir/--work-tree."
+            git_c = re.search(rf"\bgit\s+-C\s+{PATH_ARG}", seg)
+            target = resolve(git_c.group(1), cwd) if git_c else cwd
+            on_main = current_branch(target) in ("main", "master")
         if on_main and re.search(r"\bgit\b.*\bcommit\b", seg):
             return "Committing on main is not allowed. Create a feature branch."
         push = re.search(r"\bgit\b.*\bpush\b(.*)", seg)
