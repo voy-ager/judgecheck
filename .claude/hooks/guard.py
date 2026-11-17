@@ -5,6 +5,7 @@ Exit code 2 blocks the tool call and shows the reason to Claude.
 
 import json
 import re
+import shutil
 import subprocess
 import sys
 
@@ -13,20 +14,42 @@ SPLIT = re.compile(r"&&|\|\||[;|\n]")
 RULES = [
     (r"\bgh\s+pr\s+merge\b", "Only the maintainer merges PRs."),
     (r"--no-verify\b", "Skipping hooks is not allowed."),
-    (r"\bgit\b.*\bpush\b.*(--force\b|--force-with-lease|\s-f\b|\s\+\S)", "Force push is not allowed."),
+    (
+        r"\bgit\b.*\bpush\b.*(--force\b|--force-with-lease|\s-f\b|\s\+\S)",
+        "Force push is not allowed.",
+    ),
     (r"\bgit\b.*\bpush\b.*(\bmain\b|\bmaster\b)", "Pushing to main is not allowed."),
-    (r"\bgit\b.*\bconfig\b.*\buser\.(email|name)\s+[^\s|;&]", "Changing git identity is not allowed."),
-    (r"\bgh\s+repo\s+(delete|edit\b.*--visibility)", "Deleting the repo or changing visibility needs the maintainer."),
-    (r"\bgh\s+api\b.*(-X|--method)\s*DELETE\b", "DELETE calls to the GitHub API need the maintainer."),
-    (r"\bgh\s+api\b.*rulesets.*(-X|--method)\s*(PUT|PATCH)\b", "Editing branch rulesets needs the maintainer."),
+    (
+        r"\bgit\b.*\bconfig\b.*\buser\.(email|name)\s+[^\s|;&]",
+        "Changing git identity is not allowed.",
+    ),
+    (
+        r"\bgh\s+repo\s+(delete|edit\b.*--visibility)",
+        "Deleting the repo or changing visibility needs the maintainer.",
+    ),
+    (
+        r"\bgh\s+api\b.*(-X|--method)\s*DELETE\b",
+        "DELETE calls to the GitHub API need the maintainer.",
+    ),
+    (
+        r"\bgh\s+api\b.*rulesets.*(-X|--method)\s*(PUT|PATCH)\b",
+        "Editing branch rulesets needs the maintainer.",
+    ),
 ]
 
 
 def current_branch(cwd: str | None) -> str:
+    git = shutil.which("git")
+    if git is None:
+        return ""
     try:
-        out = subprocess.run(
-            ["git", "symbolic-ref", "--short", "HEAD"],
-            cwd=cwd, capture_output=True, text=True, timeout=5,
+        # Fixed args, no shell, so S603 is safe here.
+        out = subprocess.run(  # noqa: S603
+            [git, "symbolic-ref", "--short", "HEAD"],
+            cwd=cwd,
+            capture_output=True,
+            text=True,
+            timeout=5,
         )
         return out.stdout.strip()
     except Exception:
