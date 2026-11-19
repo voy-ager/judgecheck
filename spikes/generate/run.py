@@ -15,12 +15,15 @@ import argparse  # noqa: E402
 import asyncio  # noqa: E402
 import json  # noqa: E402
 import re  # noqa: E402
+import subprocess  # noqa: E402
+import sys  # noqa: E402
 from datetime import UTC, datetime  # noqa: E402
 from importlib.metadata import version  # noqa: E402
 from pathlib import Path  # noqa: E402
 from typing import Any  # noqa: E402
 
 import httpx  # noqa: E402
+import pandas  # noqa: E402
 
 OLLAMA = "http://localhost:11434"
 TEMPERATURE = 0.0
@@ -35,10 +38,16 @@ class Recorder:
         self.path = path
         self.path.write_text("", encoding="utf-8")
         self.n = 0
+        self.example_id: Any = None  # item being processed; items run sequentially
 
     def add(self, record: dict[str, Any]) -> None:
         self.n += 1
-        record = {"call": self.n, "ts": datetime.now(UTC).isoformat(), **record}
+        record = {
+            "call": self.n,
+            "example_id": self.example_id,
+            "ts": datetime.now(UTC).isoformat(),
+            **record,
+        }
         with self.path.open("a", encoding="utf-8") as f:
             f.write(json.dumps(record, ensure_ascii=False) + "\n")
 
@@ -130,13 +139,27 @@ def run_deepeval(
     from deepeval.test_case import LLMTestCase
 
     judge = _deepeval_judge(client, model, rec)
+    by_id = {str(i["id"]): i["id"] for i in items}
+
+    class TaggedFaithfulness(FaithfulnessMetric):  # type: ignore[misc]
+        """Sets the current item id before each (sequential) measure() so raw calls are tagged."""
+
+        def measure(self, test_case: Any, *args: Any, **kwargs: Any) -> Any:
+            rec.example_id = by_id[test_case.name]
+            return super().measure(test_case, *args, **kwargs)
+
+    # DeepEval resolves prompt templates by class name
+    TaggedFaithfulness.__name__ = "FaithfulnessMetric"
+    metric = TaggedFaithfulness(model=judge, async_mode=False, include_reason=True)
     cases = [
         LLMTestCase(
-            input=i["question"], actual_output=i["answer"], retrieval_context=[i["context"]]
+            name=str(i["id"]),
+            input=i["question"],
+            actual_output=i["answer"],
+            retrieval_context=[i["context"]],
         )
         for i in items
     ]
-    metric = FaithfulnessMetric(model=judge, async_mode=False, include_reason=True)
     result = evaluate(
         cases,
         [metric],
@@ -158,18 +181,22 @@ def run_ragas(items: list[dict[str, Any]], model: str, out: Path, rec: Recorder)
     # Ollama's OpenAI-compatible endpoint; the key is a required-but-ignored placeholder.
     client = AsyncOpenAI(base_url=f"{OLLAMA}/v1", api_key="ollama", http_client=http)
     llm = llm_factory(model, provider="openai", client=client, temperature=TEMPERATURE, seed=SEED)
-    dataset = EvaluationDataset.from_list(
-        [
-            {
-                "user_input": i["question"],
-                "response": i["answer"],
-                "retrieved_contexts": [i["context"]],
-            }
-            for i in items
-        ]
-    )
-    result = evaluate(dataset, [Faithfulness()], llm=llm, show_progress=False)
-    df = result.to_pandas()
+    frames = []
+    for i in items:  # one evaluate() per item so every raw call is tagged with its id
+        rec.example_id = i["id"]
+        dataset = EvaluationDataset.from_list(
+            [
+                {
+                    "user_input": i["question"],
+                    "response": i["answer"],
+                    "retrieved_contexts": [i["context"]],
+                }
+            ]
+        )
+        df = evaluate(dataset, [Faithfulness()], llm=llm, show_progress=False).to_pandas()
+        df.insert(0, "example_id", i["id"])
+        frames.append(df)
+    df = pandas.concat(frames, ignore_index=True)
     df.to_csv(out / "native_ragas.csv", index=False)
     df.to_json(out / "native_ragas.json", orient="records", indent=2)
 
@@ -181,6 +208,12 @@ def ollama_digest(model: str) -> str | None:
     return next((m["digest"] for m in tags if m["name"] == model), None)
 
 
+def _with_framework(argv: list[str], fw: str) -> list[str]:
+    out = list(argv)
+    out[out.index("--framework") + 1] = fw
+    return out
+
+
 def main() -> None:
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument("--items", type=Path, required=True)
@@ -189,6 +222,12 @@ def main() -> None:
     p.add_argument("--deepeval-client", choices=["native", "openai-compat"], default="native")
     p.add_argument("--limit", type=int, default=None, help="use only the first N items")
     args = p.parse_args()
+    if args.framework == "both":  # one process per framework: DeepEval leaves Ragas hanging
+        for fw in ("deepeval", "ragas"):
+            subprocess.run(  # noqa: S603
+                [sys.executable, __file__, *_with_framework(sys.argv[1:], fw)], check=True
+            )
+        return
     items = json.loads(args.items.read_text(encoding="utf-8"))[: args.limit]
     slug = re.sub(r"[^A-Za-z0-9._-]", "_", args.model)
     runners = {

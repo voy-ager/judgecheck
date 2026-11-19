@@ -1,5 +1,6 @@
 [
   {
+    "example_id":1,
     "user_input":"When was the Eiffel Tower completed?",
     "retrieved_contexts":[
       "The Eiffel Tower, built for the 1889 World's Fair in Paris, was completed in March 1889. It is 330 metres tall including antennas."
@@ -8,6 +9,7 @@
     "faithfulness":1.0
   },
   {
+    "example_id":2,
     "user_input":"How many moons does Mars have?",
     "retrieved_contexts":[
       "Mars has two small moons, Phobos and Deimos, discovered by Asaph Hall in 1877."
@@ -16,6 +18,7 @@
     "faithfulness":1.0
   },
   {
+    "example_id":3,
     "user_input":"What is the refund window?",
     "retrieved_contexts":[
       "Customers may return unopened items within 30 days of delivery for a full refund. Opened items are eligible for store credit only."

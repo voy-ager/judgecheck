@@ -1,7 +1,7 @@
 {
   "test_results": [
     {
-      "name": "test_case_0",
+      "name": "1",
       "success": false,
       "metrics_data": [
         {
@@ -37,7 +37,7 @@
       "expectations": null
     },
     {
-      "name": "test_case_1",
+      "name": "2",
       "success": true,
       "metrics_data": [
         {
@@ -73,7 +73,7 @@
       "expectations": null
     },
     {
-      "name": "test_case_2",
+      "name": "3",
       "success": true,
       "metrics_data": [
         {
