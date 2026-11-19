@@ -15,4 +15,5 @@ Output goes to `out/<framework>-<model>/` (`:` becomes `_`): the framework's nat
 (`native_deepeval.json`, or `native_ragas.csv` and `.json`), `raw_calls.jsonl` (every raw judge
 request and response, recorded by an httpx event hook on the judge's HTTP client) and `meta.json`
 (model, Ollama digest, framework versions, temperature 0, seed 0, timestamp).
+`--deepeval-client native|openai-compat` (default native) picks DeepEval's own Ollama client or its OpenAI-compatible LocalModel.
 Telemetry is switched off in `run.py` before the frameworks are imported.

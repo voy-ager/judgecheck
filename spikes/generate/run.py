@@ -43,6 +43,17 @@ class Recorder:
             f.write(json.dumps(record, ensure_ascii=False) + "\n")
 
 
+def _record(rec: Recorder, resp: httpx.Response) -> None:
+    rec.add(
+        {
+            "request": resp.request.extensions.get("rec"),
+            "url": str(resp.request.url),
+            "status": resp.status_code,
+            "response": resp.json() if resp.status_code == 200 else resp.text,
+        }
+    )
+
+
 def _hooks(rec: Recorder) -> dict[str, list[Any]]:
     """httpx event hooks (async) that record each raw request/response pair."""
 
@@ -51,25 +62,43 @@ def _hooks(rec: Recorder) -> dict[str, list[Any]]:
 
     async def on_response(resp: httpx.Response) -> None:
         await resp.aread()
-        rec.add(
-            {
-                "request": resp.request.extensions.get("rec"),
-                "url": str(resp.request.url),
-                "status": resp.status_code,
-                "response": resp.json() if resp.status_code == 200 else resp.text,
-            }
-        )
+        _record(rec, resp)
 
     return {"request": [on_request], "response": [on_response]}
 
 
-def run_deepeval(items: list[dict[str, Any]], model: str, out: Path, rec: Recorder) -> None:
-    from deepeval import evaluate
-    from deepeval.evaluate.configs import AsyncConfig, DisplayConfig
-    from deepeval.metrics import FaithfulnessMetric
-    from deepeval.models import LocalModel
-    from deepeval.test_case import LLMTestCase
+def _sync_hooks(rec: Recorder) -> dict[str, list[Any]]:
+    """Same as _hooks, for synchronous httpx clients."""
+
+    def on_request(req: httpx.Request) -> None:
+        req.extensions["rec"] = json.loads(req.content or b"null")
+
+    def on_response(resp: httpx.Response) -> None:
+        resp.read()
+        _record(rec, resp)
+
+    return {"request": [on_request], "response": [on_response]}
+
+
+def _deepeval_judge(client: str, model: str, rec: Recorder) -> Any:
+    from deepeval.models import LocalModel, OllamaModel
     from openai import AsyncOpenAI
+
+    if client == "native":
+
+        class RecordingOllama(OllamaModel):  # type: ignore[misc]
+            """Native OllamaModel; its client kwargs are forwarded to httpx, so we add hooks."""
+
+            def _build_client(self, cls: Any) -> Any:
+                hooks = _hooks(rec) if cls.__name__ == "AsyncClient" else _sync_hooks(rec)
+                return cls(host=self.base_url, event_hooks=hooks)
+
+        return RecordingOllama(
+            model=model,
+            base_url=OLLAMA,
+            temperature=TEMPERATURE,
+            generation_kwargs={"seed": SEED},
+        )
 
     class RecordingLocal(LocalModel):  # type: ignore[misc]
         """LocalModel (OpenAI-compatible Ollama endpoint) with a recording http client."""
@@ -83,13 +112,24 @@ def run_deepeval(items: list[dict[str, Any]], model: str, out: Path, rec: Record
         def generate(self, prompt: str, schema: Any = None, audio: Any = None) -> Any:
             return asyncio.run(self.a_generate(prompt, schema, audio))
 
-    judge = RecordingLocal(
+    return RecordingLocal(
         model=model,
         api_key="ollama",  # placeholder; Ollama ignores it
         base_url=f"{OLLAMA}/v1",
         temperature=TEMPERATURE,
         generation_kwargs={"seed": SEED},
     )
+
+
+def run_deepeval(
+    items: list[dict[str, Any]], model: str, out: Path, rec: Recorder, client: str = "native"
+) -> None:
+    from deepeval import evaluate
+    from deepeval.evaluate.configs import AsyncConfig, DisplayConfig
+    from deepeval.metrics import FaithfulnessMetric
+    from deepeval.test_case import LLMTestCase
+
+    judge = _deepeval_judge(client, model, rec)
     cases = [
         LLMTestCase(
             input=i["question"], actual_output=i["answer"], retrieval_context=[i["context"]]
@@ -146,11 +186,15 @@ def main() -> None:
     p.add_argument("--items", type=Path, required=True)
     p.add_argument("--model", required=True)
     p.add_argument("--framework", choices=["deepeval", "ragas", "both"], required=True)
+    p.add_argument("--deepeval-client", choices=["native", "openai-compat"], default="native")
     p.add_argument("--limit", type=int, default=None, help="use only the first N items")
     args = p.parse_args()
     items = json.loads(args.items.read_text(encoding="utf-8"))[: args.limit]
     slug = re.sub(r"[^A-Za-z0-9._-]", "_", args.model)
-    runners = {"deepeval": run_deepeval, "ragas": run_ragas}
+    runners = {
+        "deepeval": lambda *a: run_deepeval(*a, client=args.deepeval_client),
+        "ragas": run_ragas,
+    }
     for fw in ("deepeval", "ragas") if args.framework == "both" else (args.framework,):
         out = HERE / "out" / f"{fw}-{slug}"
         out.mkdir(parents=True, exist_ok=True)
@@ -164,6 +208,7 @@ def main() -> None:
             "temperature": TEMPERATURE,
             "seed": SEED,
             "n_items": len(items),
+            "deepeval_client": args.deepeval_client if fw == "deepeval" else None,
             "n_raw_calls": rec.n,
             "timestamp": datetime.now(UTC).isoformat(),
             "versions": {k: version(k) for k in ("deepeval", "ragas")},
