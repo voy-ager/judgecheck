@@ -1,0 +1,114 @@
+{
+  "test_results": [
+    {
+      "name": "test_case_0",
+      "success": false,
+      "metrics_data": [
+        {
+          "name": "Faithfulness",
+          "threshold": 0.5,
+          "success": false,
+          "score": 0.0,
+          "reason": "The score is 0.00 because the actual output contradicts the information in the retrieval context. The claim states that the Eiffel Tower was completed in March 1889, but the retrieval context clearly states that it was built for the 1889 World's Fair in Paris, which typically takes place in July.",
+          "strictMode": false,
+          "flaky": false,
+          "evaluationModel": "qwen2.5-coder:3b (Local Model)",
+          "error": null,
+          "evaluationCost": 0.0,
+          "inputTokenCount": 0,
+          "outputTokenCount": 0,
+          "verboseLogs": "Truths (limit=None):\n[\n    \"The Eiffel Tower was built for the 1889 World's Fair in Paris.\",\n    \"The Eiffel Tower is 330 metres tall including antennas.\"\n] \n \nClaims:\n[\n    \"It was completed in March 1889.\"\n] \n \nVerdicts:\n[\n    {\n        \"verdict\": \"no\",\n        \"reason\": \"The claim states that the Eiffel Tower was completed in March 1889, but the retrieval context clearly states that it was built for the 1889 World's Fair in Paris, which typically takes place in July.\"\n    }\n]",
+          "expectationsData": null
+        }
+      ],
+      "conversational": false,
+      "index": 0,
+      "multimodal": false,
+      "input": "When was the Eiffel Tower completed?",
+      "actual_output": "It was completed in March 1889.",
+      "expected_output": null,
+      "context": null,
+      "retrieval_context": [
+        "The Eiffel Tower, built for the 1889 World's Fair in Paris, was completed in March 1889. It is 330 metres tall including antennas."
+      ],
+      "turns": null,
+      "metadata": null,
+      "classifications": null,
+      "expectations": null
+    },
+    {
+      "name": "test_case_1",
+      "success": true,
+      "metrics_data": [
+        {
+          "name": "Faithfulness",
+          "threshold": 0.5,
+          "success": true,
+          "score": 1.0,
+          "reason": "The score is 1.00 because there are no contradictions in the actual output.",
+          "strictMode": false,
+          "flaky": false,
+          "evaluationModel": "qwen2.5-coder:3b (Local Model)",
+          "error": null,
+          "evaluationCost": 0.0,
+          "inputTokenCount": 0,
+          "outputTokenCount": 0,
+          "verboseLogs": "Truths (limit=None):\n[\n    \"Mars has two small moons, Phobos and Deimos.\"\n] \n \nClaims:\n[\n    \"Mars has two moons, Phobos and Deimos.\"\n] \n \nVerdicts:\n[\n    {\n        \"verdict\": \"yes\",\n        \"reason\": null\n    }\n]",
+          "expectationsData": null
+        }
+      ],
+      "conversational": false,
+      "index": 1,
+      "multimodal": false,
+      "input": "How many moons does Mars have?",
+      "actual_output": "Mars has two moons, Phobos and Deimos.",
+      "expected_output": null,
+      "context": null,
+      "retrieval_context": [
+        "Mars has two small moons, Phobos and Deimos, discovered by Asaph Hall in 1877."
+      ],
+      "turns": null,
+      "metadata": null,
+      "classifications": null,
+      "expectations": null
+    },
+    {
+      "name": "test_case_2",
+      "success": true,
+      "metrics_data": [
+        {
+          "name": "Faithfulness",
+          "threshold": 0.5,
+          "success": true,
+          "score": 1.0,
+          "reason": "The score is 1.00 because there are no contradictions in the 'actual output'.",
+          "strictMode": false,
+          "flaky": false,
+          "evaluationModel": "qwen2.5-coder:3b (Local Model)",
+          "error": null,
+          "evaluationCost": 0.0,
+          "inputTokenCount": 0,
+          "outputTokenCount": 0,
+          "verboseLogs": "Truths (limit=None):\n[\n    \"Customers may return unopened items within 30 days of delivery for a full refund.\",\n    \"Opened items are eligible for store credit only.\"\n] \n \nClaims:\n[\n    \"Unopened items can be returned within 30 days of delivery for a full refund.\"\n] \n \nVerdicts:\n[\n    {\n        \"verdict\": \"yes\",\n        \"reason\": null\n    }\n]",
+          "expectationsData": null
+        }
+      ],
+      "conversational": false,
+      "index": 2,
+      "multimodal": false,
+      "input": "What is the refund window?",
+      "actual_output": "Unopened items can be returned within 30 days of delivery for a full refund.",
+      "expected_output": null,
+      "context": null,
+      "retrieval_context": [
+        "Customers may return unopened items within 30 days of delivery for a full refund. Opened items are eligible for store credit only."
+      ],
+      "turns": null,
+      "metadata": null,
+      "classifications": null,
+      "expectations": null
+    }
+  ],
+  "confident_link": null,
+  "test_run_id": null
+}
