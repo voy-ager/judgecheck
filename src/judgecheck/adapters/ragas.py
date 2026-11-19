@@ -10,6 +10,7 @@ from judgecheck.adapters.base import (
     MISSING_REASON,
     load_raw_calls,
     match_raw_outputs,
+    require_id,
     score_or_failure,
 )
 from judgecheck.models import JudgeRecord, Verdict
@@ -54,13 +55,18 @@ def read_ragas(
     raw_calls: Path | None = None,
     metric: str = "faithfulness",
     threshold: float | None = None,
+    allow_index_ids: bool = False,
 ) -> list[JudgeRecord]:
-    """Parse a Ragas CSV/JSON export. example_id is the `example_id` column, else the row index.
+    """Parse a Ragas CSV/JSON export. example_id is the `example_id` column.
+
+    A row without one is an error unless `allow_index_ids` (then the row index is used).
 
     Ragas has no pass/fail threshold; verdict is set only when `threshold` is given.
     """
     rows = _load_rows(path)
-    ids = [str(r.get("example_id") or i) for i, r in enumerate(rows)]
+    ids = [
+        require_id(r.get("example_id"), path.name, allow_index_ids, i) for i, r in enumerate(rows)
+    ]
     records = [_record(e, r, metric, threshold) for e, r in zip(ids, rows, strict=True)]
     needles = {
         e: [str(r.get("response") or ""), *_contexts(r)] for e, r in zip(ids, rows, strict=True)

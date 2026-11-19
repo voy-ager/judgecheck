@@ -8,6 +8,7 @@ from judgecheck.adapters.base import (
     MISSING_REASON,
     load_raw_calls,
     match_raw_outputs,
+    require_id,
     score_or_failure,
 )
 from judgecheck.models import JudgeRecord
@@ -39,8 +40,12 @@ def _record(example_id: str, md: dict[str, Any]) -> JudgeRecord:
     )
 
 
-def read_deepeval(path: Path, raw_calls: Path | None = None) -> list[JudgeRecord]:
-    """Parse a DeepEval JSON export. example_id is the test case `name` (else its index).
+def read_deepeval(
+    path: Path, raw_calls: Path | None = None, allow_index_ids: bool = False
+) -> list[JudgeRecord]:
+    """Parse a DeepEval JSON export. example_id is the test case `name`.
+
+    A test case without a name is an error unless `allow_index_ids` (then its index is used).
 
     Test cases with no `metrics_data` (skipped rows) yield no record; `join` reports them.
     """
@@ -48,7 +53,7 @@ def read_deepeval(path: Path, raw_calls: Path | None = None) -> list[JudgeRecord
     records: list[JudgeRecord] = []
     needles: dict[str, list[str]] = {}
     for i, tr in enumerate(data["test_results"]):
-        eid = str(tr.get("name") or tr.get("index", i))
+        eid = require_id(tr.get("name"), path.name, allow_index_ids, tr.get("index", i))
         needles[eid] = [tr.get("actual_output") or "", *(tr.get("retrieval_context") or [])]
         records.extend(_record(eid, md) for md in tr.get("metrics_data") or [])
     raw = match_raw_outputs(needles, load_raw_calls(raw_calls))

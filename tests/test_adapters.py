@@ -27,14 +27,14 @@ def test_pilot_deepeval_without_raw() -> None:
 
 @pytest.mark.parametrize("name", ["ragas.csv", "ragas.json"])
 def test_pilot_ragas(name: str) -> None:
-    recs = read_ragas(FX / name, FX / "ragas_raw_calls.jsonl", threshold=0.5)
+    recs = read_ragas(FX / name, FX / "ragas_raw_calls.jsonl", threshold=0.5, allow_index_ids=True)
     assert [r.example_id for r in recs] == ["0", "1", "2"]
     assert all(r.score == 1.0 and r.verdict == "pass" for r in recs)
     assert all(r.raw_output for r in recs)
 
 
 def test_ragas_no_threshold_means_no_verdict() -> None:
-    assert all(r.verdict is None for r in read_ragas(FX / "ragas.csv"))
+    assert all(r.verdict is None for r in read_ragas(FX / "ragas.csv", allow_index_ids=True))
 
 
 def write(tmp_path: Path, name: str, obj: Any) -> Path:
@@ -52,12 +52,12 @@ def test_ragas_nan_csv_and_json(tmp_path: Path) -> None:
     json_p = write(
         tmp_path, "r.json", '[{"response": "x", "faithfulness": NaN}, {"faithfulness": null}]'
     )
-    assert [r.failure_reason for r in read_ragas(json_p)] == [NAN, NAN]
+    assert [r.failure_reason for r in read_ragas(json_p, allow_index_ids=True)] == [NAN, NAN]
 
 
 def test_ragas_missing_field_and_bad_values(tmp_path: Path) -> None:
     p = write(tmp_path, "r.json", [{"response": "x"}, {"faithfulness": "abc"}, {"faithfulness": 7}])
-    recs = read_ragas(p)
+    recs = read_ragas(p, allow_index_ids=True)
     assert [r.status for r in recs] == ["failed"] * 3
     assert recs[0].failure_reason == "missing score field"
     assert "non-numeric" in (recs[1].failure_reason or "")
@@ -66,7 +66,7 @@ def test_ragas_missing_field_and_bad_values(tmp_path: Path) -> None:
 
 def test_ragas_context_string_unparseable(tmp_path: Path) -> None:
     p = write(tmp_path, "r.csv", "response,retrieved_contexts,faithfulness\nx,not a list,1.0\n")
-    assert read_ragas(p)[0].status == "ok"
+    assert read_ragas(p, allow_index_ids=True)[0].status == "ok"
 
 
 def de_row(md: dict[str, Any], name: str = "t") -> dict[str, Any]:
@@ -102,7 +102,7 @@ def test_deepeval_skipped_row_and_index_id(tmp_path: Path) -> None:
         {"index": 4, "metrics_data": [{"score": 1.0, "success": True}]},
         {"name": "skipped", "metrics_data": []},
     ]
-    recs = read_deepeval(write(tmp_path, "d.json", {"test_results": rows}))
+    recs = read_deepeval(write(tmp_path, "d.json", {"test_results": rows}), allow_index_ids=True)
     assert [r.example_id for r in recs] == ["4"] and recs[0].metric == "faithfulness"
 
 
@@ -126,3 +126,34 @@ def test_base_helpers(tmp_path: Path) -> None:
     assert load_raw_calls(None) == []
     assert score_or_failure(0.25) == (0.25, None)
     assert score_or_failure(float("nan"))[1] == NAN
+
+
+def test_missing_id_is_error_by_default(tmp_path: Path) -> None:
+    rows = [{"metrics_data": [{"score": 1.0, "success": True}]}]
+    with pytest.raises(ValueError, match=r"d\.json: row 0 has no example id"):
+        read_deepeval(write(tmp_path, "d.json", {"test_results": rows}))
+    with pytest.raises(ValueError, match=r"r\.csv: row 1"):
+        read_ragas(write(tmp_path, "r.csv", "example_id,faithfulness\na,1.0\n,1.0\n"))
+
+
+def test_raw_call_example_id_field_wins(tmp_path: Path) -> None:
+    def call(eid: str | None, text: str, resp: str) -> str:
+        c: dict[str, Any] = {
+            "request": {"messages": [{"content": text}]},
+            "response": {"choices": [{"message": {"content": resp}}]},
+        }
+        if eid is not None:
+            c["example_id"] = eid
+        return json.dumps(c)
+
+    md = {"name": "F", "score": 1.0, "success": True}
+    rows = [de_row(md, "a"), de_row(md, "b")]
+    rows[0]["actual_output"], rows[1]["actual_output"] = "ans-a", "ans-b"
+    lines = [
+        call("b", "mentions a only", "R-b"),
+        call("zzz", "x", "R-unknown"),
+        call(None, "text has ans-a", "R-a"),
+    ]
+    raw = write(tmp_path, "raw.jsonl", "\n".join(lines))
+    recs = read_deepeval(write(tmp_path, "d.json", {"test_results": rows}), raw)
+    assert recs[0].raw_output == "R-a" and recs[1].raw_output == "R-b"
