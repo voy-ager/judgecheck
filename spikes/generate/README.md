@@ -17,3 +17,8 @@ request and response, recorded by an httpx event hook on the judge's HTTP client
 (model, Ollama digest, framework versions, temperature 0, seed 0, timestamp).
 `--deepeval-client native|openai-compat` (default native) picks DeepEval's own Ollama client or its OpenAI-compatible LocalModel.
 Telemetry is switched off in `run.py` before the frameworks are imported.
+Items: `context` may be a string (smoke items) or a list of passages (golden set, `data/golden/v0/items.json`).
+`meta.json` also records the items file sha256 and the Ollama version.
+DeepEval's result cache is disabled (`CacheConfig(write_cache=False, use_cache=False)`): it crashed after the judge calls
+with a missing cached-run object, and a cache hit would skip live judge calls.
+On Windows set `PYTHONUTF8=1`, otherwise DeepEval's console output fails with a cp1252 UnicodeEncodeError.

@@ -13,6 +13,7 @@ os.environ["RAGAS_DO_NOT_TRACK"] = "true"
 
 import argparse  # noqa: E402
 import asyncio  # noqa: E402
+import hashlib  # noqa: E402
 import json  # noqa: E402
 import re  # noqa: E402
 import subprocess  # noqa: E402
@@ -135,6 +136,11 @@ def _ctx(i: dict[str, Any]) -> list[str]:
     return i["context"] if isinstance(i["context"], list) else [i["context"]]
 
 
+def _selfcheck() -> None:
+    assert _ctx({"context": "a"}) == ["a"]
+    assert _ctx({"context": ["a", "b"]}) == ["a", "b"]
+
+
 def run_deepeval(
     items: list[dict[str, Any]], model: str, out: Path, rec: Recorder, client: str = "native"
 ) -> None:
@@ -207,6 +213,10 @@ def run_ragas(items: list[dict[str, Any]], model: str, out: Path, rec: Recorder)
     df.to_json(out / "native_ragas.json", orient="records", indent=2)
 
 
+def ollama_version() -> str:
+    return str(httpx.get(f"{OLLAMA}/api/version", timeout=30).json()["version"])
+
+
 def ollama_digest(model: str) -> str | None:
     r = httpx.post(f"{OLLAMA}/api/show", json={"model": model}, timeout=30)
     r.raise_for_status()
@@ -228,6 +238,7 @@ def main() -> None:
     p.add_argument("--deepeval-client", choices=["native", "openai-compat"], default="native")
     p.add_argument("--limit", type=int, default=None, help="use only the first N items")
     args = p.parse_args()
+    _selfcheck()
     if args.framework == "both":  # one process per framework: DeepEval leaves Ragas hanging
         for fw in ("deepeval", "ragas"):
             subprocess.run(  # noqa: S603
@@ -253,6 +264,8 @@ def main() -> None:
             "temperature": TEMPERATURE,
             "seed": SEED,
             "n_items": len(items),
+            "items_sha256": hashlib.sha256(args.items.read_bytes()).hexdigest(),
+            "ollama_version": ollama_version(),
             "deepeval_client": args.deepeval_client if fw == "deepeval" else None,
             "n_raw_calls": rec.n,
             "timestamp": datetime.now(UTC).isoformat(),
