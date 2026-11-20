@@ -1,7 +1,7 @@
 {
   "test_results": [
     {
-      "name": "test_case_0",
+      "name": "1",
       "success": false,
       "metrics_data": [
         {
@@ -9,15 +9,15 @@
           "threshold": 0.5,
           "success": false,
           "score": 0.0,
-          "reason": "The score is 0.00 because the actual output contradicts the information in the retrieval context. The claim states that the Eiffel Tower was completed in March 1889, but the retrieval context clearly states that it was built for the 1889 World's Fair in Paris, which typically takes place in July.",
+          "reason": "The score is 0.00 because the actual output contradicts the information in the retrieval context by stating that the Eiffel Tower was completed in March 1889, while the retrieval context clearly states that it was built for the 1889 World's Fair in Paris, not completed in March.",
           "strictMode": false,
           "flaky": false,
-          "evaluationModel": "qwen2.5-coder:3b (Local Model)",
+          "evaluationModel": "qwen2.5-coder:3b (Ollama)",
           "error": null,
           "evaluationCost": 0.0,
           "inputTokenCount": 0,
           "outputTokenCount": 0,
-          "verboseLogs": "Truths (limit=None):\n[\n    \"The Eiffel Tower was built for the 1889 World's Fair in Paris.\",\n    \"The Eiffel Tower is 330 metres tall including antennas.\"\n] \n \nClaims:\n[\n    \"It was completed in March 1889.\"\n] \n \nVerdicts:\n[\n    {\n        \"verdict\": \"no\",\n        \"reason\": \"The claim states that the Eiffel Tower was completed in March 1889, but the retrieval context clearly states that it was built for the 1889 World's Fair in Paris, which typically takes place in July.\"\n    }\n]",
+          "verboseLogs": "Truths (limit=None):\n[\n    \"The Eiffel Tower was built for the 1889 World's Fair in Paris.\",\n    \"The Eiffel Tower is 330 metres tall including antennas.\"\n] \n \nClaims:\n[\n    \"It was completed in March 1889.\"\n] \n \nVerdicts:\n[\n    {\n        \"verdict\": \"no\",\n        \"reason\": \"The claim states that the Eiffel Tower was completed in March 1889, but the retrieval context clearly states that it was built for the 1889 World's Fair in Paris, not completed in March.\"\n    }\n]",
           "expectationsData": null
         }
       ],
@@ -37,7 +37,7 @@
       "expectations": null
     },
     {
-      "name": "test_case_1",
+      "name": "2",
       "success": true,
       "metrics_data": [
         {
@@ -48,7 +48,7 @@
           "reason": "The score is 1.00 because there are no contradictions in the actual output.",
           "strictMode": false,
           "flaky": false,
-          "evaluationModel": "qwen2.5-coder:3b (Local Model)",
+          "evaluationModel": "qwen2.5-coder:3b (Ollama)",
           "error": null,
           "evaluationCost": 0.0,
           "inputTokenCount": 0,
@@ -73,7 +73,7 @@
       "expectations": null
     },
     {
-      "name": "test_case_2",
+      "name": "3",
       "success": true,
       "metrics_data": [
         {
@@ -84,7 +84,7 @@
           "reason": "The score is 1.00 because there are no contradictions in the 'actual output'.",
           "strictMode": false,
           "flaky": false,
-          "evaluationModel": "qwen2.5-coder:3b (Local Model)",
+          "evaluationModel": "qwen2.5-coder:3b (Ollama)",
           "error": null,
           "evaluationCost": 0.0,
           "inputTokenCount": 0,

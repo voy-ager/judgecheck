@@ -6,8 +6,9 @@
   "temperature": 0.0,
   "seed": 0,
   "n_items": 3,
+  "deepeval_client": "native",
   "n_raw_calls": 12,
-  "timestamp": "2026-11-17T21:54:26.598331+00:00",
+  "timestamp": "2026-11-19T22:01:59.329292+00:00",
   "versions": {
     "deepeval": "4.3.4",
     "ragas": "0.4.4"

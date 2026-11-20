@@ -6,8 +6,9 @@
   "temperature": 0.0,
   "seed": 0,
   "n_items": 3,
+  "deepeval_client": null,
   "n_raw_calls": 6,
-  "timestamp": "2026-11-17T21:55:36.573080+00:00",
+  "timestamp": "2026-11-19T22:02:49.504691+00:00",
   "versions": {
     "deepeval": "4.3.4",
     "ragas": "0.4.4"

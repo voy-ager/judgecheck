@@ -3,7 +3,11 @@ name = "judgecheck-spike-generate"
 version = "0.0.0"
 description = "Isolated spike: run DeepEval and Ragas faithfulness on a local Ollama judge. Never shipped."
 requires-python = ">=3.12"
-dependencies = ["deepeval==4.3.4", "ragas==0.4.4"]
+dependencies = [
+    "deepeval==4.3.4",
+    "ollama>=0.6.3",
+    "ragas==0.4.4",
+]
 
 [tool.uv]
 package = false
