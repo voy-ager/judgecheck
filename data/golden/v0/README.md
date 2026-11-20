@@ -5,6 +5,7 @@ history and how-tos. All content is invented for this project; no external datas
 
 - `items.json`: the items (`g001`..`g030`, shuffled).
 - `labels_template.csv`: the sheet to fill in (`example_id,label,note`).
+- `human_labels.csv`: the maintainer's blind labels (round 1, 2026-11-20), notes kept verbatim.
 - `intended_labels.json`: the author's intended labels, for later comparison only.
 
 ## How to label

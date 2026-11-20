@@ -1,0 +1,1088 @@
+{
+  "test_results": [
+    {
+      "name": "g001",
+      "success": false,
+      "metrics_data": [
+        {
+          "name": "Faithfulness",
+          "threshold": 0.5,
+          "success": false,
+          "score": 0.0,
+          "reason": "The score is 0.00 because there are no contradictions in the actual output to justify a higher faithfulness score.",
+          "strictMode": false,
+          "flaky": false,
+          "evaluationModel": "llama3.2:latest (Ollama)",
+          "error": null,
+          "evaluationCost": 0.0,
+          "inputTokenCount": 0,
+          "outputTokenCount": 0,
+          "verboseLogs": "Truths (limit=None):\n[\n    \"The Lakeside bike-share scheme launched in 2019.\",\n    \"The Lakeside bike-share scheme has 900 bikes.\",\n    \"The Lakeside bike-share scheme has 85 docking stations.\",\n    \"A single ride costs 2 dollars for the first 30 minutes.\",\n    \"A single ride costs 1 dollar for each additional 15 minutes.\",\n    \"Monthly members ride the first 45 minutes of every trip free.\",\n    \"Bikes must be returned to any docking station.\",\n    \"Riders under 16 must be accompanied by an adult.\"\n] \n \nClaims:\n[\n    \"The Lakeside bike-share scheme launched in 2019 with 200 bikes across 20 docking stations.\",\n    \"The Lakeside bike-share scheme has grown to 900 bikes and 85 stations.\",\n    \"A single ride costs 2 dollars for the first 30 minutes and 1 dollar for each additional 15 minutes.\",\n    \"Monthly members ride the first 45 minutes of every trip free.\",\n    \"Bikes can be returned to any docking station.\",\n    \"Riders under 16 need to be accompanied by an adult.\",\n    \"The scheme also runs a 24-hour helpline for stolen bikes.\"\n] \n \nVerdicts:\n[\n    {\n        \"verdict\": \"no\",\n        \"reason\": null\n    }\n]",
+          "expectationsData": null
+        }
+      ],
+      "conversational": false,
+      "index": 0,
+      "multimodal": false,
+      "input": "Tell me about the Lakeside bike-share scheme.",
+      "actual_output": "The Lakeside bike-share scheme launched in 2019 with 200 bikes across 20 docking stations, and it has since grown to 900 bikes and 85 stations. A single ride costs 2 dollars for the first 30 minutes and 1 dollar for each additional 15 minutes, while monthly members ride the first 45 minutes of every trip free. Bikes can be returned to any docking station, and riders under 16 need to be accompanied by an adult. The scheme also runs a 24-hour helpline for stolen bikes.",
+      "expected_output": null,
+      "context": null,
+      "retrieval_context": [
+        "The Lakeside bike-share scheme launched in 2019 with 200 bikes across 20 docking stations. It has since grown to 900 bikes and 85 stations.",
+        "A single ride costs 2 dollars for the first 30 minutes and 1 dollar for each additional 15 minutes. Monthly members ride the first 45 minutes of every trip free.",
+        "Bikes must be returned to any docking station. Riders under 16 must be accompanied by an adult."
+      ],
+      "turns": null,
+      "metadata": null,
+      "classifications": null,
+      "expectations": null
+    },
+    {
+      "name": "g002",
+      "success": true,
+      "metrics_data": [
+        {
+          "name": "Faithfulness",
+          "threshold": 0.5,
+          "success": true,
+          "score": 1.0,
+          "reason": "The score is 1.00 because there are no contradictions found in the actual output.",
+          "strictMode": false,
+          "flaky": false,
+          "evaluationModel": "llama3.2:latest (Ollama)",
+          "error": null,
+          "evaluationCost": 0.0,
+          "inputTokenCount": 0,
+          "outputTokenCount": 0,
+          "verboseLogs": "Truths (limit=None):\n[\n    \"Visitor parking is free for the first two hours.\",\n    \"The charge for parking after the first two hours is 3 dollars per hour.\",\n    \"The daily maximum parking charge is 18 dollars.\"\n] \n \nClaims:\n[\n    \"The daily maximum is 18 dollars, and the first two hours are free.\"\n] \n \nVerdicts:\n[\n    {\n        \"verdict\": \"yes\",\n        \"reason\": null\n    }\n]",
+          "expectationsData": null
+        }
+      ],
+      "conversational": false,
+      "index": 1,
+      "multimodal": false,
+      "input": "What is the most I can pay for visitor parking in a day?",
+      "actual_output": "The daily maximum is 18 dollars, and the first two hours are free.",
+      "expected_output": null,
+      "context": null,
+      "retrieval_context": [
+        "Visitor parking is free for the first two hours. After that the charge is 3 dollars per hour, up to a daily maximum of 18 dollars."
+      ],
+      "turns": null,
+      "metadata": null,
+      "classifications": null,
+      "expectations": null
+    },
+    {
+      "name": "g003",
+      "success": true,
+      "metrics_data": [
+        {
+          "name": "Faithfulness",
+          "threshold": 0.5,
+          "success": true,
+          "score": 1.0,
+          "reason": "The score is 1.00 because there are no contradictions found in the actual output.",
+          "strictMode": false,
+          "flaky": false,
+          "evaluationModel": "llama3.2:latest (Ollama)",
+          "error": null,
+          "evaluationCost": 0.0,
+          "inputTokenCount": 0,
+          "outputTokenCount": 0,
+          "verboseLogs": "Truths (limit=None):\n[\n    \"Nightly backups in Corvex Cloud are retained for 14 days.\",\n    \"Weekly backups in Corvex Cloud are retained for 12 weeks.\"\n] \n \nClaims:\n[\n    \"Nightly backups are kept for 14 days.\"\n] \n \nVerdicts:\n[\n    {\n        \"verdict\": \"yes\",\n        \"reason\": null\n    }\n]",
+          "expectationsData": null
+        }
+      ],
+      "conversational": false,
+      "index": 2,
+      "multimodal": false,
+      "input": "How long are nightly backups kept in Corvex Cloud?",
+      "actual_output": "Nightly backups are kept for 14 days.",
+      "expected_output": null,
+      "context": null,
+      "retrieval_context": [
+        "Nightly backups in Corvex Cloud are retained for 14 days. Weekly backups are retained for 12 weeks."
+      ],
+      "turns": null,
+      "metadata": null,
+      "classifications": null,
+      "expectations": null
+    },
+    {
+      "name": "g004",
+      "success": true,
+      "metrics_data": [
+        {
+          "name": "Faithfulness",
+          "threshold": 0.5,
+          "success": true,
+          "score": 0.5,
+          "reason": "The score is 0.50 because there are no contradictions in the actual output to justify a higher faithfulness score.",
+          "strictMode": false,
+          "flaky": false,
+          "evaluationModel": "llama3.2:latest (Ollama)",
+          "error": null,
+          "evaluationCost": 0.0,
+          "inputTokenCount": 0,
+          "outputTokenCount": 0,
+          "verboseLogs": "Truths (limit=None):\n[\n    \"Standard shipping takes 3 to 5 business days.\",\n    \"Orders over 50 dollars ship free.\"\n] \n \nClaims:\n[\n    \"Standard shipping takes 3 to 5 business days.\",\n    \"A tracking link is sent by SMS.\"\n] \n \nVerdicts:\n[\n    {\n        \"verdict\": \"yes\",\n        \"reason\": null\n    },\n    {\n        \"verdict\": \"no\",\n        \"reason\": null\n    }\n]",
+          "expectationsData": null
+        }
+      ],
+      "conversational": false,
+      "index": 3,
+      "multimodal": false,
+      "input": "How long does standard shipping take?",
+      "actual_output": "Standard shipping takes 3 to 5 business days, and a tracking link is sent by SMS.",
+      "expected_output": null,
+      "context": null,
+      "retrieval_context": [
+        "Standard shipping takes 3 to 5 business days. Orders over 50 dollars ship free."
+      ],
+      "turns": null,
+      "metadata": null,
+      "classifications": null,
+      "expectations": null
+    },
+    {
+      "name": "g005",
+      "success": false,
+      "metrics_data": [
+        {
+          "name": "Faithfulness",
+          "threshold": 0.5,
+          "success": false,
+          "score": 0.375,
+          "reason": "The score is 0.38 because there are no clear contradictions in the actual output that deviate from the retrieval context, indicating a relatively low level of faithfulness.",
+          "strictMode": false,
+          "flaky": false,
+          "evaluationModel": "llama3.2:latest (Ollama)",
+          "error": null,
+          "evaluationCost": 0.0,
+          "inputTokenCount": 0,
+          "outputTokenCount": 0,
+          "verboseLogs": "Truths (limit=None):\n[\n    \"The Atlas meeting room seats 12 people.\",\n    \"The Atlas meeting room has a wall-mounted display.\"\n] \n \nClaims:\n[\n    \"This is the AI output.\",\n    \"The AI is generating a response based on the input provided.\",\n    \"The output is in JSON format.\",\n    \"The 'claims' key is a list of strings.\",\n    \"The output only includes claims that are factual, regardless of their accuracy.\",\n    \"The claims are extracted from the AI output, without prior knowledge or context.\",\n    \"The output is based on the AI's internal workings, not on external information.\"\n] \n \nVerdicts:\n[\n    {\n        \"verdict\": \"yes\",\n        \"reason\": null\n    },\n    {\n        \"verdict\": \"no\",\n        \"reason\": null\n    },\n    {\n        \"verdict\": \"no\",\n        \"reason\": null\n    },\n    {\n        \"verdict\": \"no\",\n        \"reason\": null\n    },\n    {\n        \"verdict\": \"no\",\n        \"reason\": null\n    },\n    {\n        \"verdict\": \"no\",\n        \"reason\": null\n    },\n    {\n        \"verdict\": \"borderline\",\n        \"reason\": null\n    },\n    {\n        \"verdict\": \"borderline\",\n        \"reason\": null\n    }\n]",
+          "expectationsData": null
+        }
+      ],
+      "conversational": false,
+      "index": 4,
+      "multimodal": false,
+      "input": "How many seats does the Atlas room hold?",
+      "actual_output": "   \n ",
+      "expected_output": null,
+      "context": null,
+      "retrieval_context": [
+        "The Atlas meeting room seats 12 people and has a wall-mounted display."
+      ],
+      "turns": null,
+      "metadata": null,
+      "classifications": null,
+      "expectations": null
+    },
+    {
+      "name": "g006",
+      "success": true,
+      "metrics_data": [
+        {
+          "name": "Faithfulness",
+          "threshold": 0.5,
+          "success": true,
+          "score": 1.0,
+          "reason": "The score is 1.00 because there are no contradictions found in the actual output.",
+          "strictMode": false,
+          "flaky": false,
+          "evaluationModel": "llama3.2:latest (Ollama)",
+          "error": null,
+          "evaluationCost": 0.0,
+          "inputTokenCount": 0,
+          "outputTokenCount": 0,
+          "verboseLogs": "Truths (limit=None):\n[\n    \"The lighthouse at Point Calder was built in 1890.\",\n    \"The lighthouse at Point Calder was automated in 1974.\"\n] \n \nClaims:\n[\n    \"The Point Calder lighthouse was built of granite in 1890 and automated in 1974.\"\n] \n \nVerdicts:\n[\n    {\n        \"verdict\": \"yes\",\n        \"reason\": null\n    }\n]",
+          "expectationsData": null
+        }
+      ],
+      "conversational": false,
+      "index": 5,
+      "multimodal": false,
+      "input": "When was the Point Calder lighthouse built?",
+      "actual_output": "The Point Calder lighthouse was built of granite in 1890 and automated in 1974.",
+      "expected_output": null,
+      "context": null,
+      "retrieval_context": [
+        "The lighthouse at Point Calder was built in 1890 and automated in 1974."
+      ],
+      "turns": null,
+      "metadata": null,
+      "classifications": null,
+      "expectations": null
+    },
+    {
+      "name": "g007",
+      "success": true,
+      "metrics_data": [
+        {
+          "name": "Faithfulness",
+          "threshold": 0.5,
+          "success": true,
+          "score": 1.0,
+          "reason": "The score is 1.00 because there are no contradictions found in the actual output.",
+          "strictMode": false,
+          "flaky": false,
+          "evaluationModel": "llama3.2:latest (Ollama)",
+          "error": null,
+          "evaluationCost": 0.0,
+          "inputTokenCount": 0,
+          "outputTokenCount": 0,
+          "verboseLogs": "Truths (limit=None):\n[\n    \"Water boils at a lower temperature when atmospheric pressure is lower.\",\n    \"Water boils at a lower temperature on a high mountain.\"\n] \n \nClaims:\n[\n    \"Water boils at 100 degrees Celsius at sea level.\"\n] \n \nVerdicts:\n[\n    {\n        \"verdict\": \"yes\",\n        \"reason\": null\n    }\n]",
+          "expectationsData": null
+        }
+      ],
+      "conversational": false,
+      "index": 6,
+      "multimodal": false,
+      "input": "At what temperature does water boil at sea level?",
+      "actual_output": "Water boils at 100 degrees Celsius at sea level.",
+      "expected_output": null,
+      "context": null,
+      "retrieval_context": [
+        "Water boils at a lower temperature when atmospheric pressure is lower, such as on a high mountain."
+      ],
+      "turns": null,
+      "metadata": null,
+      "classifications": null,
+      "expectations": null
+    },
+    {
+      "name": "g008",
+      "success": false,
+      "metrics_data": [
+        {
+          "name": "Faithfulness",
+          "threshold": 0.5,
+          "success": false,
+          "score": 0.3333333333333333,
+          "reason": "The score is 0.33 because there are no clear contradictions in the actual output that deviate from the retrieval context.",
+          "strictMode": false,
+          "flaky": false,
+          "evaluationModel": "llama3.2:latest (Ollama)",
+          "error": null,
+          "evaluationCost": 0.0,
+          "inputTokenCount": 0,
+          "outputTokenCount": 0,
+          "verboseLogs": "Truths (limit=None):\n[\n    \"Plants use chlorophyll in their leaves to absorb light.\",\n    \"Plants convert carbon dioxide and water into glucose.\",\n    \"Plants release oxygen.\"\n] \n \nClaims:\n[\n    \"Chlorophyll absorbs light, and the plant uses that energy to turn carbon dioxide and water into glucose, releasing oxygen.\"\n] \n \nVerdicts:\n[\n    {\n        \"verdict\": \"no\",\n        \"reason\": null\n    },\n    {\n        \"verdict\": \"yes\",\n        \"reason\": null\n    },\n    {\n        \"verdict\": \"no\",\n        \"reason\": null\n    }\n]",
+          "expectationsData": null
+        }
+      ],
+      "conversational": false,
+      "index": 7,
+      "multimodal": false,
+      "input": "What does photosynthesis do?",
+      "actual_output": "Chlorophyll absorbs light, and the plant uses that energy to turn carbon dioxide and water into glucose, releasing oxygen.",
+      "expected_output": null,
+      "context": null,
+      "retrieval_context": [
+        "Plants use chlorophyll in their leaves to absorb light. Using that energy they convert carbon dioxide and water into glucose and release oxygen."
+      ],
+      "turns": null,
+      "metadata": null,
+      "classifications": null,
+      "expectations": null
+    },
+    {
+      "name": "g009",
+      "success": false,
+      "metrics_data": [
+        {
+          "name": "Faithfulness",
+          "threshold": 0.5,
+          "success": false,
+          "score": 0.0,
+          "reason": "The score is 0.00 because there are no contradictions in the actual output to justify a higher faithfulness score.",
+          "strictMode": false,
+          "flaky": false,
+          "evaluationModel": "llama3.2:latest (Ollama)",
+          "error": null,
+          "evaluationCost": 0.0,
+          "inputTokenCount": 0,
+          "outputTokenCount": 0,
+          "verboseLogs": "Truths (limit=None):\n[\n    \"Passwords must be at least 12 characters long.\",\n    \"Passwords must include at least one number.\"\n] \n \nClaims:\n[\n    \"Passwords must be at least 12 characters and include one number and one symbol.\"\n] \n \nVerdicts:\n[\n    {\n        \"verdict\": \"no\",\n        \"reason\": null\n    }\n]",
+          "expectationsData": null
+        }
+      ],
+      "conversational": false,
+      "index": 8,
+      "multimodal": false,
+      "input": "What are the password requirements?",
+      "actual_output": "Passwords must be at least 12 characters and include one number and one symbol.",
+      "expected_output": null,
+      "context": null,
+      "retrieval_context": [
+        "Passwords must be at least 12 characters long and include at least one number."
+      ],
+      "turns": null,
+      "metadata": null,
+      "classifications": null,
+      "expectations": null
+    },
+    {
+      "name": "g010",
+      "success": true,
+      "metrics_data": [
+        {
+          "name": "Faithfulness",
+          "threshold": 0.5,
+          "success": true,
+          "score": 1.0,
+          "reason": "The score is 1.00 because there are no contradictions found in the actual output.",
+          "strictMode": false,
+          "flaky": false,
+          "evaluationModel": "llama3.2:latest (Ollama)",
+          "error": null,
+          "evaluationCost": 0.0,
+          "inputTokenCount": 0,
+          "outputTokenCount": 0,
+          "verboseLogs": "Truths (limit=None):\n[\n    \"Full-time employees accrue 1.5 days of paid leave per month.\",\n    \"Unused leave up to 10 days carries over to the next year.\",\n    \"Anything above 10 days of unused leave is forfeited.\"\n] \n \nClaims:\n[\n    \"Up to 10 unused days carry over to the next year; anything beyond 10 is forfeited.\"\n] \n \nVerdicts:\n[\n    {\n        \"verdict\": \"yes\",\n        \"reason\": null\n    }\n]",
+          "expectationsData": null
+        }
+      ],
+      "conversational": false,
+      "index": 9,
+      "multimodal": false,
+      "input": "How much unused leave carries over?",
+      "actual_output": "Up to 10 unused days carry over to the next year; anything beyond 10 is forfeited.",
+      "expected_output": null,
+      "context": null,
+      "retrieval_context": [
+        "Full-time employees accrue 1.5 days of paid leave per month. Unused leave up to 10 days carries over to the next year; anything above that is forfeited."
+      ],
+      "turns": null,
+      "metadata": null,
+      "classifications": null,
+      "expectations": null
+    },
+    {
+      "name": "g011",
+      "success": false,
+      "metrics_data": [
+        {
+          "name": "Faithfulness",
+          "threshold": 0.5,
+          "success": false,
+          "score": 0.0,
+          "reason": "The score is 0.00 because there are no contradictions in the actual output to justify a higher faithfulness score.",
+          "strictMode": false,
+          "flaky": false,
+          "evaluationModel": "llama3.2:latest (Ollama)",
+          "error": null,
+          "evaluationCost": 0.0,
+          "inputTokenCount": 0,
+          "outputTokenCount": 0,
+          "verboseLogs": "Truths (limit=None):\n[\n    \"Plan A costs 10 dollars per month on monthly billing.\",\n    \"Choosing annual billing gives a 20 percent discount on the total yearly price.\"\n] \n \nClaims:\n[\n    \"On annual billing Plan A costs 96 dollars a year: 12 months at 10 dollars is 120 dollars, less the 20 percent discount.\"\n] \n \nVerdicts:\n[\n    {\n        \"verdict\": \"no\",\n        \"reason\": null\n    }\n]",
+          "expectationsData": null
+        }
+      ],
+      "conversational": false,
+      "index": 10,
+      "multimodal": false,
+      "input": "What does Plan A cost per year on annual billing?",
+      "actual_output": "On annual billing Plan A costs 96 dollars a year: 12 months at 10 dollars is 120 dollars, less the 20 percent discount.",
+      "expected_output": null,
+      "context": null,
+      "retrieval_context": [
+        "Plan A costs 10 dollars per month on monthly billing.",
+        "Choosing annual billing gives a 20 percent discount on the total yearly price."
+      ],
+      "turns": null,
+      "metadata": null,
+      "classifications": null,
+      "expectations": null
+    },
+    {
+      "name": "g012",
+      "success": true,
+      "metrics_data": [
+        {
+          "name": "Faithfulness",
+          "threshold": 0.5,
+          "success": true,
+          "score": 1.0,
+          "reason": "The score is 1.00 because there are no contradictions found in the actual output.",
+          "strictMode": false,
+          "flaky": false,
+          "evaluationModel": "llama3.2:latest (Ollama)",
+          "error": null,
+          "evaluationCost": 0.0,
+          "inputTokenCount": 0,
+          "outputTokenCount": 0,
+          "verboseLogs": "Truths (limit=None):\n[\n    \"To reset your password, open Settings, choose Security, and select Reset password.\",\n    \"A link is emailed to you and expires after 1 hour.\"\n] \n \nClaims:\n[\n    \"Go to Settings, then Security, and choose Reset password.\",\n    \"You will be emailed a link that expires after one hour.\"\n] \n \nVerdicts:\n[\n    {\n        \"verdict\": \"yes\",\n        \"reason\": null\n    }\n]",
+          "expectationsData": null
+        }
+      ],
+      "conversational": false,
+      "index": 11,
+      "multimodal": false,
+      "input": "How do I reset my password?",
+      "actual_output": "Go to Settings, then Security, and choose Reset password. You will be emailed a link that expires after one hour.",
+      "expected_output": null,
+      "context": null,
+      "retrieval_context": [
+        "To reset your password, open Settings, choose Security, and select Reset password. A link is emailed to you and expires after 1 hour."
+      ],
+      "turns": null,
+      "metadata": null,
+      "classifications": null,
+      "expectations": null
+    },
+    {
+      "name": "g013",
+      "success": true,
+      "metrics_data": [
+        {
+          "name": "Faithfulness",
+          "threshold": 0.5,
+          "success": true,
+          "score": 0.5,
+          "reason": "The score is 0.50 because there are no contradictions in the actual output to justify a higher faithfulness score.",
+          "strictMode": false,
+          "flaky": false,
+          "evaluationModel": "llama3.2:latest (Ollama)",
+          "error": null,
+          "evaluationCost": 0.0,
+          "inputTokenCount": 0,
+          "outputTokenCount": 0,
+          "verboseLogs": "Truths (limit=None):\n[\n    \"Items may be returned within 30 days of delivery.\",\n    \"Refunds go to the original payment method.\",\n    \"Refunds are processed within 5 business days of receipt.\"\n] \n \nClaims:\n[\n    \"You can return unused items in their original packaging within 30 days of delivery.\",\n    \"The refund goes back to the original payment method within 5 business days after the item is received.\"\n] \n \nVerdicts:\n[\n    {\n        \"verdict\": \"yes\",\n        \"reason\": null\n    },\n    {\n        \"verdict\": \"no\",\n        \"reason\": null\n    }\n]",
+          "expectationsData": null
+        }
+      ],
+      "conversational": false,
+      "index": 12,
+      "multimodal": false,
+      "input": "What is the return policy?",
+      "actual_output": "You can return unused items in their original packaging within 30 days of delivery, and the refund goes back to the original payment method within 5 business days after the item is received.",
+      "expected_output": null,
+      "context": null,
+      "retrieval_context": [
+        "Items may be returned within 30 days of delivery if unused and in original packaging. Refunds go to the original payment method within 5 business days of receipt."
+      ],
+      "turns": null,
+      "metadata": null,
+      "classifications": null,
+      "expectations": null
+    },
+    {
+      "name": "g014",
+      "success": false,
+      "metrics_data": [
+        {
+          "name": "Faithfulness",
+          "threshold": 0.5,
+          "success": false,
+          "score": 0.0,
+          "reason": "The score is 0.00 because there are no contradictions in the actual output to justify a higher faithfulness score.",
+          "strictMode": false,
+          "flaky": false,
+          "evaluationModel": "llama3.2:latest (Ollama)",
+          "error": null,
+          "evaluationCost": 0.0,
+          "inputTokenCount": 0,
+          "outputTokenCount": 0,
+          "verboseLogs": "Truths (limit=None):\n[\n    \"A trial of 120 adults was conducted.\",\n    \"The new sleep app was associated with a 15 percent reduction in the time taken to fall asleep.\"\n] \n \nClaims:\n[\n    \"The trial showed the app cures insomnia, with a 15 percent reduction in time to fall asleep.\"\n] \n \nVerdicts:\n[\n    {\n        \"verdict\": \"no\",\n        \"reason\": null\n    }\n]",
+          "expectationsData": null
+        }
+      ],
+      "conversational": false,
+      "index": 13,
+      "multimodal": false,
+      "input": "What did the sleep app trial show?",
+      "actual_output": "The trial showed the app cures insomnia, with a 15 percent reduction in time to fall asleep.",
+      "expected_output": null,
+      "context": null,
+      "retrieval_context": [
+        "In a trial of 120 adults, the new sleep app was associated with a 15 percent reduction in the time taken to fall asleep."
+      ],
+      "turns": null,
+      "metadata": null,
+      "classifications": null,
+      "expectations": null
+    },
+    {
+      "name": "g015",
+      "success": true,
+      "metrics_data": [
+        {
+          "name": "Faithfulness",
+          "threshold": 0.5,
+          "success": true,
+          "score": 1.0,
+          "reason": "The score is 1.00 because there are no contradictions found in the actual output.",
+          "strictMode": false,
+          "flaky": false,
+          "evaluationModel": "llama3.2:latest (Ollama)",
+          "error": null,
+          "evaluationCost": 0.0,
+          "inputTokenCount": 0,
+          "outputTokenCount": 0,
+          "verboseLogs": "Truths (limit=None):\n[\n    \"At higher altitude atmospheric pressure is lower.\",\n    \"Water boils at a lower temperature at higher altitude.\",\n    \"Water boils near 90 degrees Celsius at about 3,000 m.\"\n] \n \nClaims:\n[\n    \"Pressure is lower at altitude, so water boils at a lower temperature, around 90 degrees Celsius at roughly 3,000 m.\"\n] \n \nVerdicts:\n[\n    {\n        \"verdict\": \"yes\",\n        \"reason\": null\n    }\n]",
+          "expectationsData": null
+        }
+      ],
+      "conversational": false,
+      "index": 14,
+      "multimodal": false,
+      "input": "Why does water boil at a lower temperature on a mountain?",
+      "actual_output": "Pressure is lower at altitude, so water boils at a lower temperature, around 90 degrees Celsius at roughly 3,000 m.",
+      "expected_output": null,
+      "context": null,
+      "retrieval_context": [
+        "At higher altitude atmospheric pressure is lower, so water boils at a lower temperature. At about 3,000 m water boils near 90 degrees Celsius."
+      ],
+      "turns": null,
+      "metadata": null,
+      "classifications": null,
+      "expectations": null
+    },
+    {
+      "name": "g016",
+      "success": false,
+      "metrics_data": [
+        {
+          "name": "Faithfulness",
+          "threshold": 0.5,
+          "success": false,
+          "score": 0.0,
+          "reason": "The score is 0.00 because there are no contradictions in the actual output to justify a higher faithfulness score.",
+          "strictMode": false,
+          "flaky": false,
+          "evaluationModel": "llama3.2:latest (Ollama)",
+          "error": null,
+          "evaluationCost": 0.0,
+          "inputTokenCount": 0,
+          "outputTokenCount": 0,
+          "verboseLogs": "Truths (limit=None):\n[\n    \"Exported reports are available for download for 7 days.\",\n    \"Exported reports must be exported again after 7 days.\"\n] \n \nClaims:\n[\n    \"Exported reports can be downloaded for 14 days, after which you must export them again.\"\n] \n \nVerdicts:\n[\n    {\n        \"verdict\": \"no\",\n        \"reason\": null\n    }\n]",
+          "expectationsData": null
+        }
+      ],
+      "conversational": false,
+      "index": 15,
+      "multimodal": false,
+      "input": "How long can I download an exported report?",
+      "actual_output": "Exported reports can be downloaded for 14 days, after which you must export them again.",
+      "expected_output": null,
+      "context": null,
+      "retrieval_context": [
+        "Exported reports are available for download for 7 days. After that they must be exported again."
+      ],
+      "turns": null,
+      "metadata": null,
+      "classifications": null,
+      "expectations": null
+    },
+    {
+      "name": "g017",
+      "success": false,
+      "metrics_data": [
+        {
+          "name": "Faithfulness",
+          "threshold": 0.5,
+          "success": false,
+          "score": 0.0,
+          "reason": "The score is 0.00 because there are no contradictions in the actual output to justify a higher faithfulness score.",
+          "strictMode": false,
+          "flaky": false,
+          "evaluationModel": "llama3.2:latest (Ollama)",
+          "error": null,
+          "evaluationCost": 0.0,
+          "inputTokenCount": 0,
+          "outputTokenCount": 0,
+          "verboseLogs": "Truths (limit=None):\n[\n    \"Expenses under 500 dollars may be approved by a team lead.\",\n    \"Expenses of 500 dollars or more require approval from the finance manager.\"\n] \n \nClaims:\n[\n    \"An expense of 800 dollars must be approved by the team lead.\"\n] \n \nVerdicts:\n[\n    {\n        \"verdict\": \"no\",\n        \"reason\": null\n    }\n]",
+          "expectationsData": null
+        }
+      ],
+      "conversational": false,
+      "index": 16,
+      "multimodal": false,
+      "input": "Who approves an expense of 800 dollars?",
+      "actual_output": "An expense of 800 dollars must be approved by the team lead.",
+      "expected_output": null,
+      "context": null,
+      "retrieval_context": [
+        "Expenses under 500 dollars may be approved by a team lead. Expenses of 500 dollars or more require approval from the finance manager."
+      ],
+      "turns": null,
+      "metadata": null,
+      "classifications": null,
+      "expectations": null
+    },
+    {
+      "name": "g018",
+      "success": true,
+      "metrics_data": [
+        {
+          "name": "Faithfulness",
+          "threshold": 0.5,
+          "success": true,
+          "score": 1.0,
+          "reason": "The score is 1.00 because there are no contradictions found in the actual output.",
+          "strictMode": false,
+          "flaky": false,
+          "evaluationModel": "llama3.2:latest (Ollama)",
+          "error": null,
+          "evaluationCost": 0.0,
+          "inputTokenCount": 0,
+          "outputTokenCount": 0,
+          "verboseLogs": "Truths (limit=None):\n[\n    \"The Orion plan includes 50 GB of storage.\",\n    \"The Orion plan includes email support.\"\n] \n \nClaims:\n[\n    \"It includes 50 GB of storage.\",\n    \"It includes email support.\",\n    \"It may also include phone support.\"\n] \n \nVerdicts:\n[\n    {\n        \"verdict\": \"yes\",\n        \"reason\": null\n    },\n    {\n        \"verdict\": \"yes\",\n        \"reason\": null\n    },\n    {\n        \"verdict\": \"borderline\",\n        \"reason\": null\n    }\n]",
+          "expectationsData": null
+        }
+      ],
+      "conversational": false,
+      "index": 17,
+      "multimodal": false,
+      "input": "What does the Orion plan include?",
+      "actual_output": "It includes 50 GB of storage and email support. I believe it may also include phone support, though I am not certain.",
+      "expected_output": null,
+      "context": null,
+      "retrieval_context": [
+        "The Orion plan includes 50 GB of storage and email support."
+      ],
+      "turns": null,
+      "metadata": null,
+      "classifications": null,
+      "expectations": null
+    },
+    {
+      "name": "g019",
+      "success": false,
+      "metrics_data": [
+        {
+          "name": "Faithfulness",
+          "threshold": 0.5,
+          "success": false,
+          "score": 0.0,
+          "reason": "The score is 0.00 because there are no contradictions in the actual output to justify a higher faithfulness score.",
+          "strictMode": false,
+          "flaky": false,
+          "evaluationModel": "llama3.2:latest (Ollama)",
+          "error": null,
+          "evaluationCost": 0.0,
+          "inputTokenCount": 0,
+          "outputTokenCount": 0,
+          "verboseLogs": "Truths (limit=None):\n[\n    \"The Meridian Treaty was signed in 1648.\",\n    \"The Meridian Treaty ended the Salt War.\",\n    \"The Salt War was signed by the kingdoms of Aldora and Vesk.\"\n] \n \nClaims:\n[\n    \"The Meridian Treaty, which ended the Salt War, was signed in 1648 by Aldora and Corrin.\"\n] \n \nVerdicts:\n[\n    {\n        \"verdict\": \"no\",\n        \"reason\": null\n    }\n]",
+          "expectationsData": null
+        }
+      ],
+      "conversational": false,
+      "index": 18,
+      "multimodal": false,
+      "input": "Who signed the Meridian Treaty?",
+      "actual_output": "The Meridian Treaty, which ended the Salt War, was signed in 1648 by Aldora and Corrin.",
+      "expected_output": null,
+      "context": null,
+      "retrieval_context": [
+        "The Meridian Treaty was signed in 1648 by the kingdoms of Aldora and Vesk, ending the Salt War."
+      ],
+      "turns": null,
+      "metadata": null,
+      "classifications": null,
+      "expectations": null
+    },
+    {
+      "name": "g020",
+      "success": false,
+      "metrics_data": [
+        {
+          "name": "Faithfulness",
+          "threshold": 0.5,
+          "success": false,
+          "score": 0.0,
+          "reason": "The score is 0.00 because there are no contradictions in the actual output to justify a higher faithfulness score.",
+          "strictMode": false,
+          "flaky": false,
+          "evaluationModel": "llama3.2:latest (Ollama)",
+          "error": null,
+          "evaluationCost": 0.0,
+          "inputTokenCount": 0,
+          "outputTokenCount": 0,
+          "verboseLogs": "Truths (limit=None):\n[\n    \"Sunlight contains all visible colours.\",\n    \"Air molecules scatter short wavelengths such as blue much more strongly than long wavelengths such as red.\",\n    \"Scattered light arrives at the observer from all directions of the sky.\"\n] \n \nClaims:\n[\n    \"Air molecules scatter blue light much more strongly than red light, so scattered blue light reaches your eyes from all over the sky.\"\n] \n \nVerdicts:\n[\n    {\n        \"verdict\": \"no\",\n        \"reason\": null\n    }\n]",
+          "expectationsData": null
+        }
+      ],
+      "conversational": false,
+      "index": 19,
+      "multimodal": false,
+      "input": "Why does the sky look blue?",
+      "actual_output": "Air molecules scatter blue light much more strongly than red light, so scattered blue light reaches your eyes from all over the sky.",
+      "expected_output": null,
+      "context": null,
+      "retrieval_context": [
+        "Sunlight contains all visible colours. Air molecules scatter short wavelengths such as blue much more strongly than long wavelengths such as red. Scattered light arrives at the observer from all directions of the sky."
+      ],
+      "turns": null,
+      "metadata": null,
+      "classifications": null,
+      "expectations": null
+    },
+    {
+      "name": "g021",
+      "success": false,
+      "metrics_data": [
+        {
+          "name": "Faithfulness",
+          "threshold": 0.5,
+          "success": false,
+          "score": 0.0,
+          "reason": "The score is 0.00 because there are no contradictions in the actual output to justify a higher faithfulness score.",
+          "strictMode": false,
+          "flaky": false,
+          "evaluationModel": "llama3.2:latest (Ollama)",
+          "error": null,
+          "evaluationCost": 0.0,
+          "inputTokenCount": 0,
+          "outputTokenCount": 0,
+          "verboseLogs": "Truths (limit=None):\n[\n    \"The Library of Marlowe was founded in 1642.\",\n    \"The Library of Marlowe was donated 800 books by Ines Hartley.\",\n    \"The Library of Marlowe moved to its current building in 1803.\"\n] \n \nClaims:\n[\n    \"Ines Hartley founded it in 1642, donating 800 books.\"\n] \n \nVerdicts:\n[\n    {\n        \"verdict\": \"no\",\n        \"reason\": null\n    }\n]",
+          "expectationsData": null
+        }
+      ],
+      "conversational": false,
+      "index": 20,
+      "multimodal": false,
+      "input": "Who founded the Library of Marlowe?",
+      "actual_output": "The merchant Ines Hartley founded it in 1642, donating 800 books.",
+      "expected_output": null,
+      "context": null,
+      "retrieval_context": [
+        "The Library of Marlowe was founded in 1642 by the merchant Ines Hartley, who donated 800 books. It moved to its current building in 1803."
+      ],
+      "turns": null,
+      "metadata": null,
+      "classifications": null,
+      "expectations": null
+    },
+    {
+      "name": "g022",
+      "success": false,
+      "metrics_data": [
+        {
+          "name": "Faithfulness",
+          "threshold": 0.5,
+          "success": false,
+          "score": 0.0,
+          "reason": "The score is 0.00 because there are no contradictions in the actual output to justify a higher faithfulness score.",
+          "strictMode": false,
+          "flaky": false,
+          "evaluationModel": "llama3.2:latest (Ollama)",
+          "error": null,
+          "evaluationCost": 0.0,
+          "inputTokenCount": 0,
+          "outputTokenCount": 0,
+          "verboseLogs": "Truths (limit=None):\n[\n    \"The security deposit is refunded within 21 days after the tenant returns the keys.\",\n    \"The refund is less any deductions for damage beyond normal wear and tear.\"\n] \n \nClaims:\n[\n    \"The landlord has three weeks to send back your deposit.\",\n    \"The landlord can keep money to cover damage that goes past ordinary wear.\"\n] \n \nVerdicts:\n[\n    {\n        \"verdict\": \"no\",\n        \"reason\": null\n    }\n]",
+          "expectationsData": null
+        }
+      ],
+      "conversational": false,
+      "index": 21,
+      "multimodal": false,
+      "input": "How do I get my deposit back when I move out?",
+      "actual_output": "Once you hand over the keys, the landlord has three weeks to send back your deposit, though they can keep money to cover damage that goes past ordinary wear.",
+      "expected_output": null,
+      "context": null,
+      "retrieval_context": [
+        "The security deposit is refunded within 21 days after the tenant returns the keys, less any deductions for damage beyond normal wear and tear."
+      ],
+      "turns": null,
+      "metadata": null,
+      "classifications": null,
+      "expectations": null
+    },
+    {
+      "name": "g023",
+      "success": false,
+      "metrics_data": [
+        {
+          "name": "Faithfulness",
+          "threshold": 0.5,
+          "success": false,
+          "score": 0.0,
+          "reason": "The score is 0.00 because there are no contradictions in the actual output to justify a higher faithfulness score.",
+          "strictMode": false,
+          "flaky": false,
+          "evaluationModel": "llama3.2:latest (Ollama)",
+          "error": null,
+          "evaluationCost": 0.0,
+          "inputTokenCount": 0,
+          "outputTokenCount": 0,
+          "verboseLogs": "Truths (limit=None):\n[\n    \"Feed the starter equal weights of flour and water once a day when kept at room temperature.\",\n    \"Feed the starter equal weights of flour and water once a week when kept in the fridge.\"\n] \n \nClaims:\n[\n    \"Once a week is enough.\"\n] \n \nVerdicts:\n[\n    {\n        \"verdict\": \"no\",\n        \"reason\": null\n    }\n]",
+          "expectationsData": null
+        }
+      ],
+      "conversational": false,
+      "index": 22,
+      "multimodal": false,
+      "input": "How often should I feed a sourdough starter kept in the fridge?",
+      "actual_output": "Once a week is enough.",
+      "expected_output": null,
+      "context": null,
+      "retrieval_context": [
+        "Feed the starter equal weights of flour and water once a day when kept at room temperature. If kept in the fridge, feeding once a week is enough."
+      ],
+      "turns": null,
+      "metadata": null,
+      "classifications": null,
+      "expectations": null
+    },
+    {
+      "name": "g024",
+      "success": true,
+      "metrics_data": [
+        {
+          "name": "Faithfulness",
+          "threshold": 0.5,
+          "success": true,
+          "score": 1.0,
+          "reason": "The score is 1.00 because there are no contradictions found in the actual output.",
+          "strictMode": false,
+          "flaky": false,
+          "evaluationModel": "llama3.2:latest (Ollama)",
+          "error": null,
+          "evaluationCost": 0.0,
+          "inputTokenCount": 0,
+          "outputTokenCount": 0,
+          "verboseLogs": "Truths (limit=None):\n[\n    \"The free plan allows 60 requests per minute.\",\n    \"The Pro plan allows 600 requests per minute.\",\n    \"Requests over the limit receive an HTTP 429 response with a Retry-After header.\"\n] \n \nClaims:\n[\n    \"You get an HTTP 429 response with a Retry-After header.\",\n    \"The free plan limit is 60 requests per minute.\"\n] \n \nVerdicts:\n[\n    {\n        \"verdict\": \"yes\",\n        \"reason\": null\n    }\n]",
+          "expectationsData": null
+        }
+      ],
+      "conversational": false,
+      "index": 23,
+      "multimodal": false,
+      "input": "What happens if I exceed the free plan rate limit?",
+      "actual_output": "You get an HTTP 429 response with a Retry-After header. The free plan limit is 60 requests per minute.",
+      "expected_output": null,
+      "context": null,
+      "retrieval_context": [
+        "The free plan allows 60 requests per minute. The Pro plan allows 600 requests per minute.",
+        "Requests over the limit receive an HTTP 429 response with a Retry-After header."
+      ],
+      "turns": null,
+      "metadata": null,
+      "classifications": null,
+      "expectations": null
+    },
+    {
+      "name": "g025",
+      "success": false,
+      "metrics_data": [
+        {
+          "name": "Faithfulness",
+          "threshold": 0.5,
+          "success": false,
+          "score": 0.0,
+          "reason": "The score is 0.00 because there are no contradictions in the actual output to justify a higher faithfulness score.",
+          "strictMode": false,
+          "flaky": false,
+          "evaluationModel": "llama3.2:latest (Ollama)",
+          "error": null,
+          "evaluationCost": 0.0,
+          "inputTokenCount": 0,
+          "outputTokenCount": 0,
+          "verboseLogs": "Truths (limit=None):\n[\n    \"Sound travels at about 343 metres per second in air at 20 degrees Celsius.\"\n] \n \nClaims:\n[\n    \"Sound travels at about 433 metres per second in air at 20 degrees Celsius.\"\n] \n \nVerdicts:\n[\n    {\n        \"verdict\": \"no\",\n        \"reason\": null\n    }\n]",
+          "expectationsData": null
+        }
+      ],
+      "conversational": false,
+      "index": 24,
+      "multimodal": false,
+      "input": "How fast does sound travel in air?",
+      "actual_output": "Sound travels at about 433 metres per second in air at 20 degrees Celsius.",
+      "expected_output": null,
+      "context": null,
+      "retrieval_context": [
+        "Sound travels at about 343 metres per second in air at 20 degrees Celsius."
+      ],
+      "turns": null,
+      "metadata": null,
+      "classifications": null,
+      "expectations": null
+    },
+    {
+      "name": "g026",
+      "success": false,
+      "metrics_data": [
+        {
+          "name": "Faithfulness",
+          "threshold": 0.5,
+          "success": false,
+          "score": 0.0,
+          "reason": "The score is 0.00 because there are no contradictions in the actual output to justify a higher faithfulness score.",
+          "strictMode": false,
+          "flaky": false,
+          "evaluationModel": "llama3.2:latest (Ollama)",
+          "error": null,
+          "evaluationCost": 0.0,
+          "inputTokenCount": 0,
+          "outputTokenCount": 0,
+          "verboseLogs": "Truths (limit=None):\n[\n    \"The oven should be preheated to 200 degrees Celsius.\",\n    \"The loaf should be baked for 35 minutes.\",\n    \"The crust should be deep golden after baking.\"\n] \n \nClaims:\n[\n    \"Preheat the oven to 220 degrees Celsius and bake for 35 minutes, until the crust is deep golden.\"\n] \n \nVerdicts:\n[\n    {\n        \"verdict\": \"no\",\n        \"reason\": null\n    }\n]",
+          "expectationsData": null
+        }
+      ],
+      "conversational": false,
+      "index": 25,
+      "multimodal": false,
+      "input": "How do I bake the loaf?",
+      "actual_output": "Preheat the oven to 220 degrees Celsius and bake for 35 minutes, until the crust is deep golden.",
+      "expected_output": null,
+      "context": null,
+      "retrieval_context": [
+        "Preheat the oven to 200 degrees Celsius and bake the loaf for 35 minutes, until the crust is deep golden."
+      ],
+      "turns": null,
+      "metadata": null,
+      "classifications": null,
+      "expectations": null
+    },
+    {
+      "name": "g027",
+      "success": false,
+      "metrics_data": [
+        {
+          "name": "Faithfulness",
+          "threshold": 0.5,
+          "success": false,
+          "score": 0.0,
+          "reason": "The score is 0.00 because there are no contradictions in the actual output to justify a higher faithfulness score.",
+          "strictMode": false,
+          "flaky": false,
+          "evaluationModel": "llama3.2:latest (Ollama)",
+          "error": null,
+          "evaluationCost": 0.0,
+          "inputTokenCount": 0,
+          "outputTokenCount": 0,
+          "verboseLogs": "Truths (limit=None):\n[\n    \"Albert Einstein was a physicist.\",\n    \"The photoelectric effect is a phenomenon.\",\n    \"Quantum mechanics is a branch of physics.\",\n    \"The Nobel Prize in Physics exists.\",\n    \"The Nobel Prize is awarded annually.\",\n    \"Albert Einstein was born before 1968.\",\n    \"The Nobel Prize is awarded to recognize outstanding contributions in physics.\",\n    \"The Nobel Prize is awarded by the Nobel Foundation.\",\n    \"The Nobel Foundation is a private organization.\",\n    \"Albert Einstein won the Nobel Prize in Physics at some point.\"\n] \n \nClaims:\n[\n    \"The Helix router comes with a 2-year warranty.\"\n] \n \nVerdicts:\n[\n    {\n        \"verdict\": \"no\",\n        \"reason\": null\n    }\n]",
+          "expectationsData": null
+        }
+      ],
+      "conversational": false,
+      "index": 26,
+      "multimodal": false,
+      "input": "What is the warranty on the Helix router?",
+      "actual_output": "The Helix router comes with a 2-year warranty.",
+      "expected_output": null,
+      "context": null,
+      "retrieval_context": null,
+      "turns": null,
+      "metadata": null,
+      "classifications": null,
+      "expectations": null
+    },
+    {
+      "name": "g028",
+      "success": false,
+      "metrics_data": [
+        {
+          "name": "Faithfulness",
+          "threshold": 0.5,
+          "success": false,
+          "score": 0.0,
+          "reason": "The score is 0.00 because there are no contradictions in the actual output to justify a higher faithfulness score.",
+          "strictMode": false,
+          "flaky": false,
+          "evaluationModel": "llama3.2:latest (Ollama)",
+          "error": null,
+          "evaluationCost": 0.0,
+          "inputTokenCount": 0,
+          "outputTokenCount": 0,
+          "verboseLogs": "Truths (limit=None):\n[\n    \"Refund requests must be made within 30 days of purchase.\"\n] \n \nClaims:\n[\n    \"I'm not sure, please check the docs.\"\n] \n \nVerdicts:\n[\n    {\n        \"verdict\": \"no\",\n        \"reason\": null\n    }\n]",
+          "expectationsData": null
+        }
+      ],
+      "conversational": false,
+      "index": 27,
+      "multimodal": false,
+      "input": "What is the refund window?",
+      "actual_output": "I'm not sure, please check the docs.",
+      "expected_output": null,
+      "context": null,
+      "retrieval_context": [
+        "Refund requests must be made within 30 days of purchase."
+      ],
+      "turns": null,
+      "metadata": null,
+      "classifications": null,
+      "expectations": null
+    },
+    {
+      "name": "g029",
+      "success": true,
+      "metrics_data": [
+        {
+          "name": "Faithfulness",
+          "threshold": 0.5,
+          "success": true,
+          "score": 0.5,
+          "reason": "The score is 0.50 because there are no contradictions in the actual output to justify a higher faithfulness score.",
+          "strictMode": false,
+          "flaky": false,
+          "evaluationModel": "llama3.2:latest (Ollama)",
+          "error": null,
+          "evaluationCost": 0.0,
+          "inputTokenCount": 0,
+          "outputTokenCount": 0,
+          "verboseLogs": "Truths (limit=None):\n[\n    \"Vitamin D supports calcium absorption in the gut.\",\n    \"Some studies suggest it may reduce fracture risk in older adults.\"\n] \n \nClaims:\n[\n    \"Vitamin D prevents fractures in older adults by supporting calcium absorption.\"\n] \n \nVerdicts:\n[\n    {\n        \"verdict\": \"no\",\n        \"reason\": null\n    },\n    {\n        \"verdict\": \"borderline\",\n        \"reason\": null\n    }\n]",
+          "expectationsData": null
+        }
+      ],
+      "conversational": false,
+      "index": 28,
+      "multimodal": false,
+      "input": "Does vitamin D help with fractures?",
+      "actual_output": "Vitamin D prevents fractures in older adults by supporting calcium absorption.",
+      "expected_output": null,
+      "context": null,
+      "retrieval_context": [
+        "Vitamin D supports calcium absorption in the gut. Some studies suggest it may reduce fracture risk in older adults."
+      ],
+      "turns": null,
+      "metadata": null,
+      "classifications": null,
+      "expectations": null
+    },
+    {
+      "name": "g030",
+      "success": true,
+      "metrics_data": [
+        {
+          "name": "Faithfulness",
+          "threshold": 0.5,
+          "success": true,
+          "score": 1.0,
+          "reason": "The score is 1.00 because there are no contradictions found in the actual output.",
+          "strictMode": false,
+          "flaky": false,
+          "evaluationModel": "llama3.2:latest (Ollama)",
+          "error": null,
+          "evaluationCost": 0.0,
+          "inputTokenCount": 0,
+          "outputTokenCount": 0,
+          "verboseLogs": "Truths (limit=None):\n[\n    \"The Zanthe Canal opened in 1871.\",\n    \"The Zanthe Canal shortened the sea route between two ports by about 3,000 kilometres.\",\n    \"Construction of the Zanthe Canal took ten years.\",\n    \"The Zanthe Canal employed roughly 30,000 workers.\"\n] \n \nClaims:\n[\n    \"It opened in 1871, after ten years of construction.\"\n] \n \nVerdicts:\n[\n    {\n        \"verdict\": \"yes\",\n        \"reason\": null\n    }\n]",
+          "expectationsData": null
+        }
+      ],
+      "conversational": false,
+      "index": 29,
+      "multimodal": false,
+      "input": "When did the Zanthe Canal open?",
+      "actual_output": "It opened in 1871, after ten years of construction.",
+      "expected_output": null,
+      "context": null,
+      "retrieval_context": [
+        "The Zanthe Canal opened in 1871 and shortened the sea route between the two ports by about 3,000 kilometres. Construction took ten years and employed roughly 30,000 workers."
+      ],
+      "turns": null,
+      "metadata": null,
+      "classifications": null,
+      "expectations": null
+    }
+  ],
+  "confident_link": null,
+  "test_run_id": null
+}
