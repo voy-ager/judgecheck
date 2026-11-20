@@ -73,8 +73,8 @@ def main() -> None:
     print("NOTE: cross-framework comparison mixes judge quality with format enforcement")
     print("(DeepEval enforces the output schema, Ragas does not); compare within a framework.")
     print("NOTE: 30 items; no difference is statistically strong. Pass threshold 0.5 (DeepEval")
-    print("default; assumed for Ragas, see its 0.7 and 1.0 lines).
-")
+    print("default; assumed for Ragas, see its 0.7 and 1.0 lines).")
+    print()
     for fw in ("deepeval", "ragas"):
         for model in MODELS:
             run = OUT / f"{fw}-{model}"

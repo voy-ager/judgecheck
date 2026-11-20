@@ -1,3 +1,8 @@
+NOTE: cross-framework comparison mixes judge quality with format enforcement
+(DeepEval enforces the output schema, Ragas does not); compare within a framework.
+NOTE: 30 items; no difference is statistically strong. Pass threshold 0.5 (DeepEval
+default; assumed for Ragas, see its 0.7 and 1.0 lines).
+
 == deepeval / llama3.2_latest  wall=560s
 scored 30/30, failed/NaN 0
 agreement on scored: 67% (20/30)
