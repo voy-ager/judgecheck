@@ -130,11 +130,16 @@ def _deepeval_judge(client: str, model: str, rec: Recorder) -> Any:
     )
 
 
+def _ctx(i: dict[str, Any]) -> list[str]:
+    """Golden items carry a list of passages; the smoke items a single string."""
+    return i["context"] if isinstance(i["context"], list) else [i["context"]]
+
+
 def run_deepeval(
     items: list[dict[str, Any]], model: str, out: Path, rec: Recorder, client: str = "native"
 ) -> None:
     from deepeval import evaluate
-    from deepeval.evaluate.configs import AsyncConfig, DisplayConfig
+    from deepeval.evaluate.configs import AsyncConfig, CacheConfig, DisplayConfig
     from deepeval.metrics import FaithfulnessMetric
     from deepeval.test_case import LLMTestCase
 
@@ -156,7 +161,7 @@ def run_deepeval(
             name=str(i["id"]),
             input=i["question"],
             actual_output=i["answer"],
-            retrieval_context=[i["context"]],
+            retrieval_context=_ctx(i),
         )
         for i in items
     ]
@@ -164,6 +169,7 @@ def run_deepeval(
         cases,
         [metric],
         async_config=AsyncConfig(run_async=False),
+        cache_config=CacheConfig(write_cache=False, use_cache=False),
         display_config=DisplayConfig(show_indicator=False, print_results=False),
     )
     (out / "native_deepeval.json").write_text(
@@ -189,7 +195,7 @@ def run_ragas(items: list[dict[str, Any]], model: str, out: Path, rec: Recorder)
                 {
                     "user_input": i["question"],
                     "response": i["answer"],
-                    "retrieved_contexts": [i["context"]],
+                    "retrieved_contexts": _ctx(i),
                 }
             ]
         )
