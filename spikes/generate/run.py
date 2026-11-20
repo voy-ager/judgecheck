@@ -137,8 +137,9 @@ def _ctx(i: dict[str, Any]) -> list[str]:
 
 
 def _selfcheck() -> None:
-    assert _ctx({"context": "a"}) == ["a"]
-    assert _ctx({"context": ["a", "b"]}) == ["a", "b"]
+    ok = _ctx({"context": "a"}) == ["a"] and _ctx({"context": ["a", "b"]}) == ["a", "b"]
+    if not ok:
+        raise SystemExit("_ctx selfcheck failed")
 
 
 def run_deepeval(
