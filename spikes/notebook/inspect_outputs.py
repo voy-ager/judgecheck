@@ -1,6 +1,7 @@
 """Spike: load committed DeepEval/Ragas outputs via the adapters, join by example_id, report.
 
-Plain script instead of a notebook (no new deps). Run: uv run python spikes/notebook/inspect_outputs.py
+Plain script instead of a notebook (no new deps). Run:
+uv run python spikes/notebook/inspect_outputs.py
 Does not touch human labels.
 """
 
