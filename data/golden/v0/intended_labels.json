@@ -1,0 +1,152 @@
+{
+  "g001": {
+    "label": "fail",
+    "why": "Long answer, all supported except the final sentence (a 24-hour helpline).",
+    "case": "edge"
+  },
+  "g002": {
+    "label": "pass",
+    "why": "Fee structure matches.",
+    "case": "faithful"
+  },
+  "g003": {
+    "label": "pass",
+    "why": "Single fact restated exactly.",
+    "case": "faithful"
+  },
+  "g004": {
+    "label": "fail",
+    "why": "Unsupported extra detail (SMS tracking).",
+    "case": "unfaithful"
+  },
+  "g005": {
+    "label": "fail",
+    "why": "Whitespace-only answer: no claims; genuinely ambiguous, labelled fail as no answer is given.",
+    "case": "edge"
+  },
+  "g006": {
+    "label": "fail",
+    "why": "Unsupported extra detail (granite).",
+    "case": "unfaithful"
+  },
+  "g007": {
+    "label": "fail",
+    "why": "Plausibly true general knowledge but absent from the context; ambiguous if world knowledge is allowed.",
+    "case": "edge"
+  },
+  "g008": {
+    "label": "pass",
+    "why": "Process described as in passage.",
+    "case": "faithful"
+  },
+  "g009": {
+    "label": "fail",
+    "why": "Unsupported extra requirement (symbol).",
+    "case": "unfaithful"
+  },
+  "g010": {
+    "label": "pass",
+    "why": "Carry-over cap stated correctly.",
+    "case": "faithful"
+  },
+  "g011": {
+    "label": "pass",
+    "why": "Answer needs arithmetic over two passages; 96 is derived, not stated; mildly ambiguous.",
+    "case": "edge"
+  },
+  "g012": {
+    "label": "pass",
+    "why": "Steps and expiry match.",
+    "case": "faithful"
+  },
+  "g013": {
+    "label": "pass",
+    "why": "Both return terms match the policy.",
+    "case": "faithful"
+  },
+  "g014": {
+    "label": "fail",
+    "why": "Overclaim: association reported as a cure.",
+    "case": "unfaithful"
+  },
+  "g015": {
+    "label": "pass",
+    "why": "Pressure link and figure both in context.",
+    "case": "faithful"
+  },
+  "g016": {
+    "label": "fail",
+    "why": "Wrong number (14 vs 7 days).",
+    "case": "unfaithful"
+  },
+  "g017": {
+    "label": "fail",
+    "why": "Swapped role (team lead vs finance manager).",
+    "case": "unfaithful"
+  },
+  "g018": {
+    "label": "fail",
+    "why": "Hedged answer: first claims supported, hedged phone-support claim is not; ambiguous because of the hedge.",
+    "case": "edge"
+  },
+  "g019": {
+    "label": "fail",
+    "why": "Swapped entity (Corrin for Vesk).",
+    "case": "unfaithful"
+  },
+  "g020": {
+    "label": "pass",
+    "why": "Every claim appears in the passage.",
+    "case": "faithful"
+  },
+  "g021": {
+    "label": "pass",
+    "why": "Founder, year and count supported.",
+    "case": "faithful"
+  },
+  "g022": {
+    "label": "pass",
+    "why": "Correct answer with heavy paraphrase; no shared wording.",
+    "case": "edge"
+  },
+  "g023": {
+    "label": "pass",
+    "why": "Fridge feeding frequency matches.",
+    "case": "faithful"
+  },
+  "g024": {
+    "label": "pass",
+    "why": "Combines two passages, all claims supported.",
+    "case": "faithful"
+  },
+  "g025": {
+    "label": "fail",
+    "why": "Wrong number (433 vs 343 m/s).",
+    "case": "unfaithful"
+  },
+  "g026": {
+    "label": "fail",
+    "why": "Wrong number (220 vs 200 degrees).",
+    "case": "unfaithful"
+  },
+  "g027": {
+    "label": "fail",
+    "why": "Empty context: the claims cannot be supported by anything.",
+    "case": "edge"
+  },
+  "g028": {
+    "label": "pass",
+    "why": "No factual claims, so vacuously supported; ambiguous (useless answer, but nothing unsupported). DeepEval may score 1.0.",
+    "case": "edge"
+  },
+  "g029": {
+    "label": "fail",
+    "why": "Overclaim: may reduce stated as prevents.",
+    "case": "unfaithful"
+  },
+  "g030": {
+    "label": "pass",
+    "why": "Date and duration both supported.",
+    "case": "faithful"
+  }
+}
