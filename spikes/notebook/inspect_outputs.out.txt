@@ -1,20 +1,61 @@
-== Record counts ==
-deepeval: 3 records, 3 ok, 0 failed
-ragas: 3 records, 3 ok, 0 failed
+golden items: 30; labels: 30; unlabelled: 0
 
-== Failed rows ==
-none
+== deepeval-llama3.2_latest ==
+records: 30 (30 ok, 0 failed)
+ids not in golden items: 0; golden items without record: 0
+join vs human labels: matched 30, records without label 0, labels without record 0
 
-== Join by example_id ==
-deepeval only: none
-ragas only:    none
-both: ['1', '2', '3']
-deepeval ids not in golden set: ['1', '2', '3']
-ragas ids not in golden set: ['1', '2', '3']
-golden items with no deepeval record: 30 of 30
-golden items with no ragas record: 30 of 30
+== deepeval-qwen2.5-coder_3b ==
+records: 30 (30 ok, 0 failed)
+ids not in golden items: 0; golden items without record: 0
+join vs human labels: matched 30, records without label 0, labels without record 0
 
-== Side by side (score, status) ==
-1: deepeval=0.0 [ok]  ragas=1.0 [ok]
-2: deepeval=1.0 [ok]  ragas=1.0 [ok]
-3: deepeval=1.0 [ok]  ragas=1.0 [ok]
+== deepeval-qwen2.5_7b ==
+records: 30 (30 ok, 0 failed)
+ids not in golden items: 0; golden items without record: 0
+join vs human labels: matched 30, records without label 0, labels without record 0
+
+== ragas-llama3.2_latest ==
+records: 30 (0 ok, 30 failed)
+  failed g001: NaN score (framework error or no statements)
+  failed g002: NaN score (framework error or no statements)
+  failed g003: NaN score (framework error or no statements)
+  failed g004: NaN score (framework error or no statements)
+  failed g005: NaN score (framework error or no statements)
+  failed g006: NaN score (framework error or no statements)
+  failed g007: NaN score (framework error or no statements)
+  failed g008: NaN score (framework error or no statements)
+  failed g009: NaN score (framework error or no statements)
+  failed g010: NaN score (framework error or no statements)
+  failed g011: NaN score (framework error or no statements)
+  failed g012: NaN score (framework error or no statements)
+  failed g013: NaN score (framework error or no statements)
+  failed g014: NaN score (framework error or no statements)
+  failed g015: NaN score (framework error or no statements)
+  failed g016: NaN score (framework error or no statements)
+  failed g017: NaN score (framework error or no statements)
+  failed g018: NaN score (framework error or no statements)
+  failed g019: NaN score (framework error or no statements)
+  failed g020: NaN score (framework error or no statements)
+  failed g021: NaN score (framework error or no statements)
+  failed g022: NaN score (framework error or no statements)
+  failed g023: NaN score (framework error or no statements)
+  failed g024: NaN score (framework error or no statements)
+  failed g025: NaN score (framework error or no statements)
+  failed g026: NaN score (framework error or no statements)
+  failed g027: NaN score (framework error or no statements)
+  failed g028: NaN score (framework error or no statements)
+  failed g029: NaN score (framework error or no statements)
+  failed g030: NaN score (framework error or no statements)
+ids not in golden items: 0; golden items without record: 0
+join vs human labels: matched 30, records without label 0, labels without record 0
+
+== ragas-qwen2.5-coder_3b ==
+records: 30 (30 ok, 0 failed)
+ids not in golden items: 0; golden items without record: 0
+join vs human labels: matched 30, records without label 0, labels without record 0
+
+== ragas-qwen2.5_7b ==
+records: 30 (30 ok, 0 failed)
+ids not in golden items: 0; golden items without record: 0
+join vs human labels: matched 30, records without label 0, labels without record 0
