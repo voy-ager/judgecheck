@@ -70,6 +70,11 @@ def echoed_schema(run: Path) -> tuple[int, int]:
 
 def main() -> None:
     human = load_labels(GOLD / "human_labels.csv")
+    print("NOTE: cross-framework comparison mixes judge quality with format enforcement")
+    print("(DeepEval enforces the output schema, Ragas does not); compare within a framework.")
+    print("NOTE: 30 items; no difference is statistically strong. Pass threshold 0.5 (DeepEval")
+    print("default; assumed for Ragas, see its 0.7 and 1.0 lines).
+")
     for fw in ("deepeval", "ragas"):
         for model in MODELS:
             run = OUT / f"{fw}-{model}"
