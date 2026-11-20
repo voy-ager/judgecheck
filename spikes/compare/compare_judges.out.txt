@@ -58,11 +58,11 @@ agreement on scored: n/a
 agreement, failed=wrong: 0% (0/30)
   real cause: judge echoed the JSON schema in 120/120 calls (retried)
   by pass threshold (score >= t; failed counted wrong):
-    t=0.5: agree 0% (0/30), false pass 0, false fail 0
-    t=0.7: agree 0% (0/30), false pass 0, false fail 0
-    t=1.0: agree 0% (0/30), false pass 0, false fail 0
-false pass (judge pass, human fail): 0 []
-false fail (judge fail, human pass): 0 []
+    t=0.5: agree 0% (0/30), false pass 0, false fail 0 (all 30 failed)
+    t=0.7: agree 0% (0/30), false pass 0, false fail 0 (all 30 failed)
+    t=1.0: agree 0% (0/30), false pass 0, false fail 0 (all 30 failed)
+false pass (judge pass, human fail): 0 [] (all 30 failed)
+false fail (judge fail, human pass): 0 [] (all 30 failed)
   g005 (human=fail): FAILED (NaN score (framework error or no statements))
   g029 (human=fail): FAILED (NaN score (framework error or no statements))
 

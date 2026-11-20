@@ -116,6 +116,7 @@ def main() -> None:
             if failed and fw == "ragas":
                 e, t = echoed_schema(run)
                 print(f"  real cause: judge echoed the JSON schema in {e}/{t} calls (retried)")
+            note = f" (all {n} failed)" if not scored else ""
             print("  by pass threshold (score >= t; failed counted wrong):")
             for th in (0.5, 0.7, 1.0):
                 v = {i: "pass" if recs[i].score >= th - 1e-9 else "fail" for i in scored}  # type: ignore[operator]
@@ -124,10 +125,10 @@ def main() -> None:
                 tff = [i for i in scored if v[i] == "fail" and human[i] == "pass"]
                 print(
                     f"    t={th}: agree {g / n:.0%} ({g}/{n}), "
-                    f"false pass {len(tfp)}, false fail {len(tff)}"
+                    f"false pass {len(tfp)}, false fail {len(tff)}{note}"
                 )
-            print(f"false pass (judge pass, human fail): {len(fp)} {fp}")
-            print(f"false fail (judge fail, human pass): {len(ff)} {ff}")
+            print(f"false pass (judge pass, human fail): {len(fp)} {fp}{note}")
+            print(f"false fail (judge fail, human pass): {len(ff)} {ff}{note}")
             for i in ("g005", "g029"):
                 r = recs.get(i)
                 what = (
