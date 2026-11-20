@@ -1,29 +1,276 @@
 [
   {
-    "example_id":1,
-    "user_input":"When was the Eiffel Tower completed?",
+    "example_id":"g001",
+    "user_input":"Tell me about the Lakeside bike-share scheme.",
     "retrieved_contexts":[
-      "The Eiffel Tower, built for the 1889 World's Fair in Paris, was completed in March 1889. It is 330 metres tall including antennas."
+      "The Lakeside bike-share scheme launched in 2019 with 200 bikes across 20 docking stations. It has since grown to 900 bikes and 85 stations.",
+      "A single ride costs 2 dollars for the first 30 minutes and 1 dollar for each additional 15 minutes. Monthly members ride the first 45 minutes of every trip free.",
+      "Bikes must be returned to any docking station. Riders under 16 must be accompanied by an adult."
     ],
-    "response":"It was completed in March 1889.",
+    "response":"The Lakeside bike-share scheme launched in 2019 with 200 bikes across 20 docking stations, and it has since grown to 900 bikes and 85 stations. A single ride costs 2 dollars for the first 30 minutes and 1 dollar for each additional 15 minutes, while monthly members ride the first 45 minutes of every trip free. Bikes can be returned to any docking station, and riders under 16 need to be accompanied by an adult. The scheme also runs a 24-hour helpline for stolen bikes.",
+    "faithfulness":0.8571428571
+  },
+  {
+    "example_id":"g002",
+    "user_input":"What is the most I can pay for visitor parking in a day?",
+    "retrieved_contexts":[
+      "Visitor parking is free for the first two hours. After that the charge is 3 dollars per hour, up to a daily maximum of 18 dollars."
+    ],
+    "response":"The daily maximum is 18 dollars, and the first two hours are free.",
     "faithfulness":1.0
   },
   {
-    "example_id":2,
-    "user_input":"How many moons does Mars have?",
+    "example_id":"g003",
+    "user_input":"How long are nightly backups kept in Corvex Cloud?",
     "retrieved_contexts":[
-      "Mars has two small moons, Phobos and Deimos, discovered by Asaph Hall in 1877."
+      "Nightly backups in Corvex Cloud are retained for 14 days. Weekly backups are retained for 12 weeks."
     ],
-    "response":"Mars has two moons, Phobos and Deimos.",
+    "response":"Nightly backups are kept for 14 days.",
     "faithfulness":1.0
   },
   {
-    "example_id":3,
+    "example_id":"g004",
+    "user_input":"How long does standard shipping take?",
+    "retrieved_contexts":[
+      "Standard shipping takes 3 to 5 business days. Orders over 50 dollars ship free."
+    ],
+    "response":"Standard shipping takes 3 to 5 business days, and a tracking link is sent by SMS.",
+    "faithfulness":0.5
+  },
+  {
+    "example_id":"g005",
+    "user_input":"How many seats does the Atlas room hold?",
+    "retrieved_contexts":[
+      "The Atlas meeting room seats 12 people and has a wall-mounted display."
+    ],
+    "response":"   \n ",
+    "faithfulness":0.0
+  },
+  {
+    "example_id":"g006",
+    "user_input":"When was the Point Calder lighthouse built?",
+    "retrieved_contexts":[
+      "The lighthouse at Point Calder was built in 1890 and automated in 1974."
+    ],
+    "response":"The Point Calder lighthouse was built of granite in 1890 and automated in 1974.",
+    "faithfulness":0.6666666667
+  },
+  {
+    "example_id":"g007",
+    "user_input":"At what temperature does water boil at sea level?",
+    "retrieved_contexts":[
+      "Water boils at a lower temperature when atmospheric pressure is lower, such as on a high mountain."
+    ],
+    "response":"Water boils at 100 degrees Celsius at sea level.",
+    "faithfulness":0.0
+  },
+  {
+    "example_id":"g008",
+    "user_input":"What does photosynthesis do?",
+    "retrieved_contexts":[
+      "Plants use chlorophyll in their leaves to absorb light. Using that energy they convert carbon dioxide and water into glucose and release oxygen."
+    ],
+    "response":"Chlorophyll absorbs light, and the plant uses that energy to turn carbon dioxide and water into glucose, releasing oxygen.",
+    "faithfulness":1.0
+  },
+  {
+    "example_id":"g009",
+    "user_input":"What are the password requirements?",
+    "retrieved_contexts":[
+      "Passwords must be at least 12 characters long and include at least one number."
+    ],
+    "response":"Passwords must be at least 12 characters and include one number and one symbol.",
+    "faithfulness":0.6666666667
+  },
+  {
+    "example_id":"g010",
+    "user_input":"How much unused leave carries over?",
+    "retrieved_contexts":[
+      "Full-time employees accrue 1.5 days of paid leave per month. Unused leave up to 10 days carries over to the next year; anything above that is forfeited."
+    ],
+    "response":"Up to 10 unused days carry over to the next year; anything beyond 10 is forfeited.",
+    "faithfulness":1.0
+  },
+  {
+    "example_id":"g011",
+    "user_input":"What does Plan A cost per year on annual billing?",
+    "retrieved_contexts":[
+      "Plan A costs 10 dollars per month on monthly billing.",
+      "Choosing annual billing gives a 20 percent discount on the total yearly price."
+    ],
+    "response":"On annual billing Plan A costs 96 dollars a year: 12 months at 10 dollars is 120 dollars, less the 20 percent discount.",
+    "faithfulness":0.75
+  },
+  {
+    "example_id":"g012",
+    "user_input":"How do I reset my password?",
+    "retrieved_contexts":[
+      "To reset your password, open Settings, choose Security, and select Reset password. A link is emailed to you and expires after 1 hour."
+    ],
+    "response":"Go to Settings, then Security, and choose Reset password. You will be emailed a link that expires after one hour.",
+    "faithfulness":1.0
+  },
+  {
+    "example_id":"g013",
+    "user_input":"What is the return policy?",
+    "retrieved_contexts":[
+      "Items may be returned within 30 days of delivery if unused and in original packaging. Refunds go to the original payment method within 5 business days of receipt."
+    ],
+    "response":"You can return unused items in their original packaging within 30 days of delivery, and the refund goes back to the original payment method within 5 business days after the item is received.",
+    "faithfulness":1.0
+  },
+  {
+    "example_id":"g014",
+    "user_input":"What did the sleep app trial show?",
+    "retrieved_contexts":[
+      "In a trial of 120 adults, the new sleep app was associated with a 15 percent reduction in the time taken to fall asleep."
+    ],
+    "response":"The trial showed the app cures insomnia, with a 15 percent reduction in time to fall asleep.",
+    "faithfulness":0.5
+  },
+  {
+    "example_id":"g015",
+    "user_input":"Why does water boil at a lower temperature on a mountain?",
+    "retrieved_contexts":[
+      "At higher altitude atmospheric pressure is lower, so water boils at a lower temperature. At about 3,000 m water boils near 90 degrees Celsius."
+    ],
+    "response":"Pressure is lower at altitude, so water boils at a lower temperature, around 90 degrees Celsius at roughly 3,000 m.",
+    "faithfulness":1.0
+  },
+  {
+    "example_id":"g016",
+    "user_input":"How long can I download an exported report?",
+    "retrieved_contexts":[
+      "Exported reports are available for download for 7 days. After that they must be exported again."
+    ],
+    "response":"Exported reports can be downloaded for 14 days, after which you must export them again.",
+    "faithfulness":1.0
+  },
+  {
+    "example_id":"g017",
+    "user_input":"Who approves an expense of 800 dollars?",
+    "retrieved_contexts":[
+      "Expenses under 500 dollars may be approved by a team lead. Expenses of 500 dollars or more require approval from the finance manager."
+    ],
+    "response":"An expense of 800 dollars must be approved by the team lead.",
+    "faithfulness":0.0
+  },
+  {
+    "example_id":"g018",
+    "user_input":"What does the Orion plan include?",
+    "retrieved_contexts":[
+      "The Orion plan includes 50 GB of storage and email support."
+    ],
+    "response":"It includes 50 GB of storage and email support. I believe it may also include phone support, though I am not certain.",
+    "faithfulness":0.6666666667
+  },
+  {
+    "example_id":"g019",
+    "user_input":"Who signed the Meridian Treaty?",
+    "retrieved_contexts":[
+      "The Meridian Treaty was signed in 1648 by the kingdoms of Aldora and Vesk, ending the Salt War."
+    ],
+    "response":"The Meridian Treaty, which ended the Salt War, was signed in 1648 by Aldora and Corrin.",
+    "faithfulness":0.6666666667
+  },
+  {
+    "example_id":"g020",
+    "user_input":"Why does the sky look blue?",
+    "retrieved_contexts":[
+      "Sunlight contains all visible colours. Air molecules scatter short wavelengths such as blue much more strongly than long wavelengths such as red. Scattered light arrives at the observer from all directions of the sky."
+    ],
+    "response":"Air molecules scatter blue light much more strongly than red light, so scattered blue light reaches your eyes from all over the sky.",
+    "faithfulness":1.0
+  },
+  {
+    "example_id":"g021",
+    "user_input":"Who founded the Library of Marlowe?",
+    "retrieved_contexts":[
+      "The Library of Marlowe was founded in 1642 by the merchant Ines Hartley, who donated 800 books. It moved to its current building in 1803."
+    ],
+    "response":"The merchant Ines Hartley founded it in 1642, donating 800 books.",
+    "faithfulness":1.0
+  },
+  {
+    "example_id":"g022",
+    "user_input":"How do I get my deposit back when I move out?",
+    "retrieved_contexts":[
+      "The security deposit is refunded within 21 days after the tenant returns the keys, less any deductions for damage beyond normal wear and tear."
+    ],
+    "response":"Once you hand over the keys, the landlord has three weeks to send back your deposit, though they can keep money to cover damage that goes past ordinary wear.",
+    "faithfulness":0.0
+  },
+  {
+    "example_id":"g023",
+    "user_input":"How often should I feed a sourdough starter kept in the fridge?",
+    "retrieved_contexts":[
+      "Feed the starter equal weights of flour and water once a day when kept at room temperature. If kept in the fridge, feeding once a week is enough."
+    ],
+    "response":"Once a week is enough.",
+    "faithfulness":1.0
+  },
+  {
+    "example_id":"g024",
+    "user_input":"What happens if I exceed the free plan rate limit?",
+    "retrieved_contexts":[
+      "The free plan allows 60 requests per minute. The Pro plan allows 600 requests per minute.",
+      "Requests over the limit receive an HTTP 429 response with a Retry-After header."
+    ],
+    "response":"You get an HTTP 429 response with a Retry-After header. The free plan limit is 60 requests per minute.",
+    "faithfulness":1.0
+  },
+  {
+    "example_id":"g025",
+    "user_input":"How fast does sound travel in air?",
+    "retrieved_contexts":[
+      "Sound travels at about 343 metres per second in air at 20 degrees Celsius."
+    ],
+    "response":"Sound travels at about 433 metres per second in air at 20 degrees Celsius.",
+    "faithfulness":0.0
+  },
+  {
+    "example_id":"g026",
+    "user_input":"How do I bake the loaf?",
+    "retrieved_contexts":[
+      "Preheat the oven to 200 degrees Celsius and bake the loaf for 35 minutes, until the crust is deep golden."
+    ],
+    "response":"Preheat the oven to 220 degrees Celsius and bake for 35 minutes, until the crust is deep golden.",
+    "faithfulness":0.0
+  },
+  {
+    "example_id":"g027",
+    "user_input":"What is the warranty on the Helix router?",
+    "retrieved_contexts":[
+
+    ],
+    "response":"The Helix router comes with a 2-year warranty.",
+    "faithfulness":0.0
+  },
+  {
+    "example_id":"g028",
     "user_input":"What is the refund window?",
     "retrieved_contexts":[
-      "Customers may return unopened items within 30 days of delivery for a full refund. Opened items are eligible for store credit only."
+      "Refund requests must be made within 30 days of purchase."
     ],
-    "response":"Unopened items can be returned within 30 days of delivery for a full refund.",
+    "response":"I'm not sure, please check the docs.",
+    "faithfulness":0.0
+  },
+  {
+    "example_id":"g029",
+    "user_input":"Does vitamin D help with fractures?",
+    "retrieved_contexts":[
+      "Vitamin D supports calcium absorption in the gut. Some studies suggest it may reduce fracture risk in older adults."
+    ],
+    "response":"Vitamin D prevents fractures in older adults by supporting calcium absorption.",
+    "faithfulness":0.5
+  },
+  {
+    "example_id":"g030",
+    "user_input":"When did the Zanthe Canal open?",
+    "retrieved_contexts":[
+      "The Zanthe Canal opened in 1871 and shortened the sea route between the two ports by about 3,000 kilometres. Construction took ten years and employed roughly 30,000 workers."
+    ],
+    "response":"It opened in 1871, after ten years of construction.",
     "faithfulness":1.0
   }
 ]

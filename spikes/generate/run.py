@@ -13,6 +13,7 @@ os.environ["RAGAS_DO_NOT_TRACK"] = "true"
 
 import argparse  # noqa: E402
 import asyncio  # noqa: E402
+import hashlib  # noqa: E402
 import json  # noqa: E402
 import re  # noqa: E402
 import subprocess  # noqa: E402
@@ -130,11 +131,22 @@ def _deepeval_judge(client: str, model: str, rec: Recorder) -> Any:
     )
 
 
+def _ctx(i: dict[str, Any]) -> list[str]:
+    """Golden items carry a list of passages; the smoke items a single string."""
+    return i["context"] if isinstance(i["context"], list) else [i["context"]]
+
+
+def _selfcheck() -> None:
+    ok = _ctx({"context": "a"}) == ["a"] and _ctx({"context": ["a", "b"]}) == ["a", "b"]
+    if not ok:
+        raise SystemExit("_ctx selfcheck failed")
+
+
 def run_deepeval(
     items: list[dict[str, Any]], model: str, out: Path, rec: Recorder, client: str = "native"
 ) -> None:
     from deepeval import evaluate
-    from deepeval.evaluate.configs import AsyncConfig, DisplayConfig
+    from deepeval.evaluate.configs import AsyncConfig, CacheConfig, DisplayConfig
     from deepeval.metrics import FaithfulnessMetric
     from deepeval.test_case import LLMTestCase
 
@@ -156,7 +168,7 @@ def run_deepeval(
             name=str(i["id"]),
             input=i["question"],
             actual_output=i["answer"],
-            retrieval_context=[i["context"]],
+            retrieval_context=_ctx(i),
         )
         for i in items
     ]
@@ -164,6 +176,7 @@ def run_deepeval(
         cases,
         [metric],
         async_config=AsyncConfig(run_async=False),
+        cache_config=CacheConfig(write_cache=False, use_cache=False),
         display_config=DisplayConfig(show_indicator=False, print_results=False),
     )
     (out / "native_deepeval.json").write_text(
@@ -189,7 +202,7 @@ def run_ragas(items: list[dict[str, Any]], model: str, out: Path, rec: Recorder)
                 {
                     "user_input": i["question"],
                     "response": i["answer"],
-                    "retrieved_contexts": [i["context"]],
+                    "retrieved_contexts": _ctx(i),
                 }
             ]
         )
@@ -199,6 +212,10 @@ def run_ragas(items: list[dict[str, Any]], model: str, out: Path, rec: Recorder)
     df = pandas.concat(frames, ignore_index=True)
     df.to_csv(out / "native_ragas.csv", index=False)
     df.to_json(out / "native_ragas.json", orient="records", indent=2)
+
+
+def ollama_version() -> str:
+    return str(httpx.get(f"{OLLAMA}/api/version", timeout=30).json()["version"])
 
 
 def ollama_digest(model: str) -> str | None:
@@ -222,6 +239,7 @@ def main() -> None:
     p.add_argument("--deepeval-client", choices=["native", "openai-compat"], default="native")
     p.add_argument("--limit", type=int, default=None, help="use only the first N items")
     args = p.parse_args()
+    _selfcheck()
     if args.framework == "both":  # one process per framework: DeepEval leaves Ragas hanging
         for fw in ("deepeval", "ragas"):
             subprocess.run(  # noqa: S603
@@ -247,6 +265,8 @@ def main() -> None:
             "temperature": TEMPERATURE,
             "seed": SEED,
             "n_items": len(items),
+            "items_sha256": hashlib.sha256(args.items.read_bytes()).hexdigest(),
+            "ollama_version": ollama_version(),
             "deepeval_client": args.deepeval_client if fw == "deepeval" else None,
             "n_raw_calls": rec.n,
             "timestamp": datetime.now(UTC).isoformat(),

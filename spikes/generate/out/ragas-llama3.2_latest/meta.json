@@ -1,0 +1,16 @@
+{
+  "framework": "ragas",
+  "framework_version": "0.4.4",
+  "model": "llama3.2:latest",
+  "ollama_digest": "a80c4f17acd55265feec403c7aef86be0c25983ab279d83f3bcd3abbcb5b8b72",
+  "temperature": 0.0,
+  "seed": 0,
+  "n_items": 30,
+  "deepeval_client": null,
+  "n_raw_calls": 120,
+  "timestamp": "2026-11-20T22:13:48.782335+00:00",
+  "versions": {
+    "deepeval": "4.3.4",
+    "ragas": "0.4.4"
+  }
+}
