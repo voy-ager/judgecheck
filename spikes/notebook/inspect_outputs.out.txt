@@ -1,0 +1,20 @@
+== Record counts ==
+deepeval: 3 records, 3 ok, 0 failed
+ragas: 3 records, 3 ok, 0 failed
+
+== Failed rows ==
+none
+
+== Join by example_id ==
+deepeval only: none
+ragas only:    none
+both: ['1', '2', '3']
+deepeval ids not in golden set: ['1', '2', '3']
+ragas ids not in golden set: ['1', '2', '3']
+golden items with no deepeval record: 30 of 30
+golden items with no ragas record: 30 of 30
+
+== Side by side (score, status) ==
+1: deepeval=0.0 [ok]  ragas=1.0 [ok]
+2: deepeval=1.0 [ok]  ragas=1.0 [ok]
+3: deepeval=1.0 [ok]  ragas=1.0 [ok]
