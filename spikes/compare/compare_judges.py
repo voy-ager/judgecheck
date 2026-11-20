@@ -8,6 +8,11 @@ Ragas has no pass threshold, so 0.5 is used to match DeepEval (our assumption).
 Wall time: meta.json has no duration field, so it is meta timestamp (run end) minus
 the first raw call timestamp (approximate; excludes the first call's own latency).
 
+Caveats: "unjudged" = DeepEval extracted zero claims, skipped the verdict call and returned
+its default score 1.0 with status ok; these are shown counted and excluded. Cross-framework
+comparison mixes judge quality with format enforcement (DeepEval enforces the output schema,
+Ragas does not); the within-framework comparison across models is the fair one.
+
 Run: uv run python spikes/compare/compare_judges.py
 """
 
@@ -45,6 +50,24 @@ def load(fw: str, run: Path) -> list[JudgeRecord]:
     return read_ragas(run / "native_ragas.json", raw, threshold=RAGAS_THRESHOLD)
 
 
+def unjudged(run: Path) -> set[str]:
+    """DeepEval items whose verbose log shows an empty claims list (no verdict call made)."""
+    data = json.loads((run / "native_deepeval.json").read_text("utf-8"))
+    return {
+        t["name"]
+        for t in data["test_results"]
+        if "Claims:\n[]" in (t["metrics_data"][0].get("verboseLogs") or "")
+    }
+
+
+def echoed_schema(run: Path) -> tuple[int, int]:
+    """(raw calls whose reply is the JSON schema echoed back, total raw calls)."""
+    calls = [json.loads(x) for x in (run / "raw_calls.jsonl").open(encoding="utf-8")]
+    texts = [c["response"]["choices"][0]["message"]["content"] for c in calls]
+    echo = sum('"properties"' in t[:30] for t in texts)
+    return echo, len(calls)
+
+
 def main() -> None:
     human = load_labels(GOLD / "human_labels.csv")
     for fw in ("deepeval", "ragas"):
@@ -73,6 +96,21 @@ def main() -> None:
                 else "agreement on scored: n/a"
             )
             print(f"agreement, failed=wrong: {(s - len(wrong)) / n:.0%} ({s - len(wrong)}/{n})")
+            if fw == "deepeval":
+                uj = sorted(unjudged(run) & set(scored))
+                ok = [i for i in scored if i not in uj]
+                good = sum(recs[i].verdict == human[i] for i in ok)
+                print(f"unjudged (zero claims, default score): {len(uj)} {uj}")
+                print(f"agreement excluding unjudged: {good / len(ok):.0%} ({good}/{len(ok)})")
+            if failed and fw == "ragas":
+                e, t = echoed_schema(run)
+                print(f"  real cause: judge echoed the JSON schema in {e}/{t} calls (retried)")
+            if fw == "ragas" and s:
+                for th in (0.7, 1.0):
+                    rows = read_ragas(run / "native_ragas.json", threshold=th)
+                    alt = {r.example_id: r for r in rows}
+                    g = sum(alt[i].verdict == human[i] for i in scored)
+                    print(f"  ragas agreement at threshold {th}: {g / n:.0%} ({g}/{n})")
             print(f"false pass (judge pass, human fail): {len(fp)} {fp}")
             print(f"false fail (judge fail, human pass): {len(ff)} {ff}")
             for i in ("g005", "g029"):
