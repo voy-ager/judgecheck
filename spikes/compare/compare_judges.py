@@ -19,13 +19,13 @@ seeing these data; confirm on fresh labelled items (P5).
 Run: uv run python spikes/compare/compare_judges.py
 """
 
-import csv
 import json
 from datetime import datetime
 from pathlib import Path
 
 from judgecheck.adapters.deepeval import read_deepeval
 from judgecheck.adapters.ragas import read_ragas
+from judgecheck.join import load_labels
 from judgecheck.models import JudgeRecord
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -35,14 +35,9 @@ RAGAS_THRESHOLD = 0.5
 MODELS = ["llama3.2_latest", "qwen2.5-coder_3b", "qwen2.5_7b"]
 
 
-def load_labels(path: Path) -> dict[str, str]:
-    with path.open(newline="", encoding="utf-8") as fh:
-        return {r["example_id"]: r["label"] for r in csv.DictReader(fh)}
-
-
 def wall_seconds(run: Path) -> float:
     end = datetime.fromisoformat(json.loads((run / "meta.json").read_text("utf-8"))["timestamp"])
-    first = json.loads((run / "raw_calls.jsonl").open(encoding="utf-8").readline())["ts"]
+    first = json.loads((run / "raw_calls.jsonl").read_text("utf-8").splitlines()[0])["ts"]
     return (end - datetime.fromisoformat(first)).total_seconds()
 
 
@@ -59,20 +54,21 @@ def unjudged(run: Path) -> set[str]:
     return {
         t["name"]
         for t in data["test_results"]
-        if "Claims:\n[]" in (t["metrics_data"][0].get("verboseLogs") or "")
+        if t.get("metrics_data")  # skipped rows have none
+        and "Claims:\n[]" in (t["metrics_data"][0].get("verboseLogs") or "")
     }
 
 
 def echoed_schema(run: Path) -> tuple[int, int]:
     """(raw calls whose reply is the JSON schema echoed back, total raw calls)."""
-    calls = [json.loads(x) for x in (run / "raw_calls.jsonl").open(encoding="utf-8")]
+    calls = [json.loads(x) for x in (run / "raw_calls.jsonl").read_text("utf-8").splitlines()]
     texts = [c["response"]["choices"][0]["message"]["content"] for c in calls]
     echo = sum('"properties"' in t[:30] for t in texts)
     return echo, len(calls)
 
 
 def main() -> None:
-    human = load_labels(GOLD / "human_labels.csv")
+    human = {lab.example_id: lab.label for lab in load_labels(GOLD / "human_labels.csv").labels}
     print("NOTE: cross-framework comparison mixes judge quality with format enforcement")
     print("(DeepEval enforces the output schema, Ragas does not); compare within a framework.")
     print("NOTE: 30 items; no difference is statistically strong. Pass threshold 0.5 (DeepEval")

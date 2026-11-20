@@ -23,13 +23,16 @@ def _load_rows(path: Path) -> list[dict[str, Any]]:
         return list(csv.DictReader(fh))
 
 
-def _contexts(row: dict[str, Any]) -> list[str]:
+def _contexts(row: dict[str, Any]) -> list[str] | None:
+    """Context strings, or None when the field parses to something that is not a list."""
     ctx = row.get("retrieved_contexts")
     if isinstance(ctx, str):
         try:
             ctx = ast.literal_eval(ctx)
         except (ValueError, SyntaxError):
             ctx = [ctx]
+    if ctx is not None and not isinstance(ctx, list):
+        return None
     return [str(c) for c in ctx or []]
 
 
@@ -68,8 +71,18 @@ def read_ragas(
         require_id(r.get("example_id"), path.name, allow_index_ids, i) for i, r in enumerate(rows)
     ]
     records = [_record(e, r, metric, threshold) for e, r in zip(ids, rows, strict=True)]
-    needles = {
-        e: [str(r.get("response") or ""), *_contexts(r)] for e, r in zip(ids, rows, strict=True)
-    }
+    needles: dict[str, list[str]] = {}
+    for n, (e, r) in enumerate(zip(ids, rows, strict=True)):
+        ctx = _contexts(r)
+        if ctx is None:
+            records[n] = JudgeRecord(
+                example_id=e,
+                framework="ragas",
+                metric=metric,
+                status="failed",
+                failure_reason="retrieved_contexts is not a list",
+            )
+            ctx = []
+        needles[e] = [str(r.get("response") or ""), *ctx]
     raw = match_raw_outputs(needles, load_raw_calls(raw_calls))
     return [r.model_copy(update={"raw_output": raw.get(r.example_id)}) for r in records]

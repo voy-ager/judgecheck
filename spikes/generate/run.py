@@ -53,13 +53,20 @@ class Recorder:
             f.write(json.dumps(record, ensure_ascii=False) + "\n")
 
 
+def _body(resp: httpx.Response) -> Any:
+    try:
+        return resp.json() if resp.status_code == 200 else resp.text
+    except ValueError:  # a 200 whose body is not JSON
+        return resp.text
+
+
 def _record(rec: Recorder, resp: httpx.Response) -> None:
     rec.add(
         {
             "request": resp.request.extensions.get("rec"),
             "url": str(resp.request.url),
             "status": resp.status_code,
-            "response": resp.json() if resp.status_code == 200 else resp.text,
+            "response": _body(resp),
         }
     )
 
@@ -226,9 +233,16 @@ def ollama_digest(model: str) -> str | None:
 
 
 def _with_framework(argv: list[str], fw: str) -> list[str]:
-    out = list(argv)
-    out[out.index("--framework") + 1] = fw
-    return out
+    out: list[str] = []
+    skip = False
+    for a in argv:  # drop "--framework X" and "--framework=X", then set ours
+        if skip:
+            skip = False
+        elif a == "--framework":
+            skip = True
+        elif not a.startswith("--framework="):
+            out.append(a)
+    return [*out, "--framework", fw]
 
 
 def main() -> None:
@@ -252,7 +266,7 @@ def main() -> None:
         "deepeval": lambda *a: run_deepeval(*a, client=args.deepeval_client),
         "ragas": run_ragas,
     }
-    for fw in ("deepeval", "ragas") if args.framework == "both" else (args.framework,):
+    for fw in (args.framework,):
         out = HERE / "out" / f"{fw}-{slug}"
         out.mkdir(parents=True, exist_ok=True)
         rec = Recorder(out / "raw_calls.jsonl")

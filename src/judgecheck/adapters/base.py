@@ -13,6 +13,8 @@ def score_or_failure(raw: object) -> tuple[float | None, str | None]:
     """Return (score, None) for a usable score, else (None, failure_reason). Never 0."""
     if raw is None or (isinstance(raw, str) and raw.strip().lower() in {"", "nan"}):
         return None, NAN_REASON
+    if isinstance(raw, bool):  # float(True) == 1.0 would pass a bad export as a real score
+        return None, f"non-numeric score: {raw!r}"
     try:
         score = float(raw)  # type: ignore[arg-type]
     except (TypeError, ValueError):
@@ -25,13 +27,16 @@ def score_or_failure(raw: object) -> tuple[float | None, str | None]:
 
 
 def _message_text(call: dict[str, Any]) -> str:
-    messages = call.get("request", {}).get("messages", [])
+    messages = (call.get("request") or {}).get("messages", [])
     return "\n".join(str(m.get("content", "")) for m in messages)
 
 
 def _response_text(call: dict[str, Any]) -> str:
+    resp = call.get("response")
     try:
-        return str(call["response"]["choices"][0]["message"]["content"])
+        if isinstance(resp, dict) and "message" in resp:  # native Ollama /api/chat
+            return str(resp["message"]["content"])
+        return str(call["response"]["choices"][0]["message"]["content"])  # OpenAI-compatible
     except (KeyError, IndexError, TypeError):
         return ""
 
@@ -57,7 +62,7 @@ def match_raw_outputs(needles: dict[str, list[str]], calls: list[RawCall]) -> di
     out: dict[str, list[str]] = {}
     for request, response, call_id in calls:
         if call_id is not None:
-            hits = [call_id] if call_id in needles else []
+            hits = [str(call_id)] if str(call_id) in needles else []
         else:
             hits = [k for k, ns in needles.items() if any(n and n in request for n in ns)]
         if len(hits) == 1:
