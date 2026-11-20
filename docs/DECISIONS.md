@@ -12,3 +12,4 @@
 | D8 | 2026-11-17 | One board (GitHub Project); ruflo for swarm, memory and claims only | Two boards double the token cost |
 | D9 | 2026-11-17 | Spike dependencies live in `spikes/generate/` (own `pyproject.toml` + `uv.lock`, `package = false`), not in the core lockfile | DeepEval and Ragas pull about 130 packages; the core project must stay small and its lockfile auditable |
 | D10 | 2026-11-17 | Known vulnerability PYSEC-2026-2447 in diskcache 5.6.3 (pulled by ragas, no fixed version; found with `pip-audit` 2.10.1 on the spike lock) is accepted only inside the local spike env, which never ships | No fix exists; the env runs locally on our own data, and the dependency must not enter the core lockfile (D9). Revisit if Ragas becomes an optional extra |
+| D11 | 2026-11-20 | Dismissed Dependabot alert #1 (diskcache, unsafe pickle, medium) | Only in the isolated spike env, which never ships; cache files are local and written by our own runs |

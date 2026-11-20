@@ -1,0 +1,56 @@
+== deepeval / llama3.2_latest  wall=560s
+scored 30/30, failed/NaN 0
+agreement on scored: 67% (20/30)
+agreement, failed=wrong: 67% (20/30)
+false pass (judge pass, human fail): 5 ['g004', 'g006', 'g007', 'g018', 'g029']
+false fail (judge fail, human pass): 5 ['g008', 'g020', 'g021', 'g023', 'g025']
+  g005 (human=fail): score=0.375 verdict=fail
+  g029 (human=fail): score=0.5 verdict=pass
+
+== deepeval / qwen2.5-coder_3b  wall=636s
+scored 30/30, failed/NaN 0
+agreement on scored: 67% (20/30)
+agreement, failed=wrong: 67% (20/30)
+false pass (judge pass, human fail): 5 ['g001', 'g004', 'g006', 'g009', 'g018']
+false fail (judge fail, human pass): 5 ['g021', 'g023', 'g024', 'g025', 'g030']
+  g005 (human=fail): score=0.0 verdict=fail
+  g029 (human=fail): score=0.0 verdict=fail
+
+== deepeval / qwen2.5_7b  wall=1007s
+scored 30/30, failed/NaN 0
+agreement on scored: 60% (18/30)
+agreement, failed=wrong: 60% (18/30)
+false pass (judge pass, human fail): 9 ['g001', 'g004', 'g006', 'g011', 'g018', 'g022', 'g026', 'g028', 'g029']
+false fail (judge fail, human pass): 3 ['g021', 'g023', 'g025']
+  g005 (human=fail): score=0.3333333333333333 verdict=fail
+  g029 (human=fail): score=1.0 verdict=pass
+
+== ragas / llama3.2_latest  wall=528s
+scored 0/30, failed/NaN 30
+  failed 30x (NaN score (framework error or no statements)): g001..g030
+agreement on scored: n/a
+agreement, failed=wrong: 0% (0/30)
+false pass (judge pass, human fail): 0 []
+false fail (judge fail, human pass): 0 []
+  g005 (human=fail): FAILED (NaN score (framework error or no statements))
+  g029 (human=fail): FAILED (NaN score (framework error or no statements))
+
+== ragas / qwen2.5-coder_3b  wall=388s
+scored 30/30, failed/NaN 0
+agreement on scored: 63% (19/30)
+agreement, failed=wrong: 63% (19/30)
+false pass (judge pass, human fail): 10 ['g001', 'g004', 'g006', 'g009', 'g011', 'g014', 'g016', 'g018', 'g019', 'g029']
+false fail (judge fail, human pass): 1 ['g025']
+  g005 (human=fail): score=0.0 verdict=fail
+  g029 (human=fail): score=0.5 verdict=pass
+
+== ragas / qwen2.5_7b  wall=794s
+scored 30/30, failed/NaN 0
+agreement on scored: 63% (19/30)
+agreement, failed=wrong: 63% (19/30)
+false pass (judge pass, human fail): 10 ['g001', 'g004', 'g006', 'g009', 'g011', 'g014', 'g018', 'g019', 'g022', 'g026']
+false fail (judge fail, human pass): 1 ['g025']
+  g005 (human=fail): score=0.0 verdict=fail
+  g029 (human=fail): score=0.0 verdict=fail
+
+== sanity: human vs intended labels: 26/30 agree; differ: ['g011', 'g022', 'g025', 'g028']
