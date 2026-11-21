@@ -37,23 +37,24 @@ false fail (judge fail, human pass): 5 ['g021', 'g023', 'g024', 'g025', 'g030']
   g029 (human=fail): score=0.0 verdict=fail
 
 == deepeval / qwen2.5_7b  wall=1007s
-scored 30/30, failed/NaN 0
-agreement on scored: 60% (18/30)
+scored 29/30, failed/NaN 1
+  failed 1x (zero_claims_default: no claims extracted, framework default score): ['g028']
+agreement on scored: 62% (18/29)
 agreement, failed=wrong: 60% (18/30)
-unjudged (zero claims, default score): 1 ['g028']
+unjudged (zero claims, default score): 0 []
 agreement excluding unjudged: 62% (18/29)
   by pass threshold (score >= t; failed counted wrong):
-    t=0.5: agree 60% (18/30), false pass 9, false fail 3
-    t=0.7: agree 70% (21/30), false pass 6, false fail 3
-    t=1.0: agree 73% (22/30), false pass 5, false fail 3
-false pass (judge pass, human fail): 9 ['g001', 'g004', 'g006', 'g011', 'g018', 'g022', 'g026', 'g028', 'g029']
+    t=0.5: agree 60% (18/30), false pass 8, false fail 3
+    t=0.7: agree 70% (21/30), false pass 5, false fail 3
+    t=1.0: agree 73% (22/30), false pass 4, false fail 3
+false pass (judge pass, human fail): 8 ['g001', 'g004', 'g006', 'g011', 'g018', 'g022', 'g026', 'g029']
 false fail (judge fail, human pass): 3 ['g021', 'g023', 'g025']
   g005 (human=fail): score=0.3333333333333333 verdict=fail
   g029 (human=fail): score=1.0 verdict=pass
 
 == ragas / llama3.2_latest  wall=528s
 scored 0/30, failed/NaN 30
-  failed 30x (NaN score (framework error or no statements)): g001..g030
+  failed 30x (schema_echo: judge echoed the JSON schema): g001..g030
 agreement on scored: n/a
 agreement, failed=wrong: 0% (0/30)
   real cause: judge echoed the JSON schema in 120/120 calls (retried)
@@ -63,8 +64,8 @@ agreement, failed=wrong: 0% (0/30)
     t=1.0: agree 0% (0/30), false pass 0, false fail 0 (all 30 failed)
 false pass (judge pass, human fail): 0 [] (all 30 failed)
 false fail (judge fail, human pass): 0 [] (all 30 failed)
-  g005 (human=fail): FAILED (NaN score (framework error or no statements))
-  g029 (human=fail): FAILED (NaN score (framework error or no statements))
+  g005 (human=fail): FAILED (schema_echo: judge echoed the JSON schema)
+  g029 (human=fail): FAILED (schema_echo: judge echoed the JSON schema)
 
 == ragas / qwen2.5-coder_3b  wall=388s
 scored 30/30, failed/NaN 0

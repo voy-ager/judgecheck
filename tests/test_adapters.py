@@ -9,7 +9,7 @@ from judgecheck.adapters.deepeval import read_deepeval
 from judgecheck.adapters.ragas import read_ragas
 
 FX = Path(__file__).parent / "fixtures" / "pilot"
-NAN = "NaN score (framework error or no statements)"
+NAN = "framework_error: NaN score"
 
 
 def test_pilot_deepeval_with_raw() -> None:
@@ -113,7 +113,7 @@ def test_deepeval_skipped_row_and_index_id(tmp_path: Path) -> None:
         {"name": "skipped", "metrics_data": []},
     ]
     recs = read_deepeval(write(tmp_path, "d.json", {"test_results": rows}), allow_index_ids=True)
-    assert [r.example_id for r in recs] == ["4"] and recs[0].metric == "faithfulness"
+    assert [r.example_id for r in recs] == ["4", "skipped"] and recs[0].metric == "faithfulness"
 
 
 def test_ambiguous_raw_call_attached_to_none(tmp_path: Path) -> None:
@@ -200,3 +200,45 @@ def test_ragas_contexts_not_a_list_is_failed(tmp_path: Path) -> None:
     recs = read_ragas(write(tmp_path, "r.json", rows), allow_index_ids=True)
     assert recs[0].status == "failed" and "retrieved_contexts" in (recs[0].failure_reason or "")
     assert recs[1].status == "ok"
+
+
+def _de_row(name: str, logs: str) -> dict[str, Any]:
+    md = {"score": 1.0, "success": True, "threshold": 0.5, "verboseLogs": logs}
+    return {"name": name, "metrics_data": [md]}
+
+
+@pytest.mark.parametrize(
+    "logs", ["Claims:\n[]\n\nVerdicts:\n[]", 'Claims:\n["a"]\n\nVerdicts:\n[]']
+)
+def test_deepeval_zero_claims_is_failed(tmp_path: Path, logs: str) -> None:
+    (rec,) = read_deepeval(write(tmp_path, "d.json", {"test_results": [_de_row("g", logs)]}))
+    assert rec.status == "failed" and rec.score is None and rec.verdict is None
+    assert (rec.failure_reason or "").startswith("zero_claims_default: ")
+
+
+def test_deepeval_nonempty_claims_stay_ok(tmp_path: Path) -> None:
+    logs = 'Claims:\n["a"]\n\nVerdicts:\n[{"verdict": "yes"}]'
+    (rec,) = read_deepeval(write(tmp_path, "d.json", {"test_results": [_de_row("g", logs)]}))
+    assert rec.status == "ok" and rec.verdict == "pass"
+
+
+def test_deepeval_skipped_row_is_failed_record(tmp_path: Path) -> None:
+    rows = [{"name": "s", "metrics_data": []}, {"name": "t"}]
+    recs = read_deepeval(write(tmp_path, "d.json", {"test_results": rows}))
+    assert [r.example_id for r in recs] == ["s", "t"]
+    assert all(
+        r.status == "failed" and (r.failure_reason or "").startswith("skipped") for r in recs
+    )
+
+
+def test_ragas_nan_reason_codes(tmp_path: Path) -> None:
+    p = write(tmp_path, "r.json", [{"example_id": e, "faithfulness": None} for e in "abc"])
+
+    def call(eid: str, text: str) -> str:
+        msg = {"message": {"content": text}}
+        return json.dumps({"example_id": eid, "request": {"messages": []}, "response": msg})
+
+    lines = [call("a", '{\n  "properties": {}}'), call("b", '{"statements": []}'), call("c", "x")]
+    raw = write(tmp_path, "raw.jsonl", "\n".join(lines))
+    codes = [(r.failure_reason or "").split(":")[0] for r in read_ragas(p, raw)]
+    assert codes == ["schema_echo", "no_statements", "framework_error"]

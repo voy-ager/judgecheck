@@ -6,10 +6,14 @@ from typing import Any
 
 from judgecheck.adapters.base import (
     MISSING_REASON,
+    MISSING_SUCCESS,
+    SKIPPED,
+    ZERO_CLAIMS_DEFAULT,
     load_raw_calls,
     match_raw_outputs,
     require_id,
     score_or_failure,
+    with_code,
 )
 from judgecheck.models import JudgeRecord
 
@@ -23,7 +27,10 @@ def _failure(md: dict[str, Any]) -> tuple[float | None, str | None]:
         return None, "score is null"
     score, reason = score_or_failure(md["score"])
     if reason is None and not isinstance(md.get("success"), bool):
-        return None, "missing success field"
+        return None, with_code(MISSING_SUCCESS, "no boolean success field")
+    logs = md.get("verboseLogs") or ""
+    if reason is None and ("Claims:\n[]" in logs or "Verdicts:\n[]" in logs):
+        return None, with_code(ZERO_CLAIMS_DEFAULT, "no claims extracted, framework default score")
     return score, reason
 
 
@@ -43,6 +50,16 @@ def _record(example_id: str, md: dict[str, Any]) -> JudgeRecord:
     )
 
 
+def _skipped(example_id: str, metric: str) -> JudgeRecord:
+    return JudgeRecord(
+        example_id=example_id,
+        framework="deepeval",
+        metric=metric.lower(),
+        status="failed",
+        failure_reason=with_code(SKIPPED, "test case has no metric result"),
+    )
+
+
 def read_deepeval(
     path: Path,
     raw_calls: Path | None = None,
@@ -54,7 +71,7 @@ def read_deepeval(
     A test case without a name is an error unless `allow_index_ids` (then its index is used).
 
     Only `metric` entries are read, so a multi-metric export gives one record per id.
-    Test cases with no `metrics_data` (skipped rows) yield no record; `join` reports them.
+    Test cases with no `metrics_data` (skipped rows) yield a failed record (D11).
     """
     data = json.loads(path.read_text("utf-8"))
     records: list[JudgeRecord] = []
@@ -62,9 +79,12 @@ def read_deepeval(
     for i, tr in enumerate(data["test_results"]):
         eid = require_id(tr.get("name"), path.name, allow_index_ids, tr.get("index", i))
         needles[eid] = [tr.get("actual_output") or "", *(tr.get("retrieval_context") or [])]
+        mds = tr.get("metrics_data") or []
+        if not mds:  # D11: a skipped test case is a failed record, not a missing one
+            records.append(_skipped(eid, metric))
         records.extend(
             _record(eid, md)
-            for md in tr.get("metrics_data") or []
+            for md in mds
             if str(md.get("name", "faithfulness")).lower() == metric.lower()
         )
     raw = match_raw_outputs(needles, load_raw_calls(raw_calls))
