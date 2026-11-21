@@ -43,7 +43,7 @@ def _record(example_id: str, md: dict[str, Any], threshold: float | None) -> Jud
     score, reason = _failure(md)
     failed = reason is not None
     verdict: Verdict | None = None
-    if not failed:
+    if score is not None and not failed:
         passed = md["success"] if threshold is None else score >= threshold
         verdict = "pass" if passed else "fail"
     return JudgeRecord(

@@ -40,12 +40,20 @@ def test_ragas_default_is_d7_pass_only_at_one(tmp_path: Path) -> None:
     assert read_ragas(p, threshold=0.5, allow_index_ids=True)[1].verdict == "pass"
 
 
+def test_ragas_boundary_and_failed_row_keeps_no_verdict(tmp_path: Path) -> None:
+    rows = [{"faithfulness": 0.9999999999999999}, {"faithfulness": 1.0}, {"faithfulness": "nan"}]
+    recs = read_ragas(write(tmp_path, "r.json", rows), allow_index_ids=True)
+    assert [r.verdict for r in recs] == ["fail", "pass", None]
+    assert recs[2].status == "failed"
+
+
 def test_deepeval_threshold_override(tmp_path: Path) -> None:
     md = {"name": "Faithfulness", "score": 0.7, "success": True, "threshold": 0.5}
     p = write(tmp_path, "d.json", {"test_results": [de_row(md)]})
     assert read_deepeval(p)[0].verdict == "pass"
     rec = read_deepeval(p, threshold=1.0)[0]
     assert rec.verdict == "fail" and rec.threshold == 1.0
+    assert read_deepeval(p, threshold=0.7)[0].verdict == "pass"  # score == threshold
     err = de_row({"name": "Faithfulness", "error": "x"})
     bad = write(tmp_path, "e.json", {"test_results": [err]})
     assert read_deepeval(bad, threshold=1.0)[0].verdict is None
