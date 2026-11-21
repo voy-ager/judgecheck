@@ -1,6 +1,6 @@
 """Tests for judgecheck.checks.failures (maintainer implements).
 
-Proposed API (pure functions over lists of JudgeRecord / golden items):
+Accepted API (D16; pure functions over lists of JudgeRecord / golden items):
     detect(records) -> list[Finding]        # one Finding per status="failed" record
     failure_rate(records) -> float          # failed / all records; 0.0 for an empty list
     failure_gate(records, max_rate=0.10) -> bool   # True = gate passes (D14: rate <= max_rate)
@@ -10,7 +10,8 @@ Finding has attributes `code` (str), `example_id` (str), `detail` (str).
 
 Decision (g005): a blank answer is a data-quality finding on the items, not a judge failure.
 The judge did run and returned a score (DeepEval 0.33 on g005), so the record is status=ok;
-flagging it in `detect` would hide that the golden item itself is bad. Maintainer to confirm.
+flagging it in `detect` would hide that the golden item itself is bad.
+Accepted by the maintainer (D16).
 """
 
 import json
@@ -193,3 +194,20 @@ def test_data_quality_on_real_golden_v0_finds_only_g005() -> None:
     assert len(items) == 30
     (f,) = fl.data_quality(items)
     assert (f.code, f.example_id) == ("blank_answer", "g005")
+
+
+def test_detail_quoting_another_code_keeps_its_own_code() -> None:
+    (f,) = fl.detect([failed("a", base.SKIPPED, "like schema_echo: not really")])
+    assert f.code == base.SKIPPED
+
+
+def test_blank_answer_item_leaves_failure_rate_unchanged() -> None:
+    recs = _run(3)
+    before = fl.failure_rate(recs)
+    assert [f.code for f in fl.data_quality([item("g005", answer="   ")])] == ["blank_answer"]
+    assert fl.failure_rate(recs) == before and fl.failure_gate(recs) is True
+
+
+def test_d14_boundary_one_of_ten_passes_two_of_ten_fails() -> None:
+    assert fl.failure_gate(_run(1, 10)) is True
+    assert fl.failure_gate(_run(2, 10)) is False
