@@ -159,9 +159,10 @@ def test_bootstrap_kappa_stat():
     assert lo <= ag.cohens_kappa(make(TEXTBOOK)) <= hi
 
 
-# sklearn cross-checks: skipped until sklearn is approved as a dev dependency.
+# sklearn cross-checks (dev dependency).
 def test_kappa_matches_sklearn():
-    metrics = pytest.importorskip("sklearn.metrics")
+    from sklearn import metrics
+
     d = make({("pass", "pass"): 7, ("pass", "fail"): 3, ("fail", "pass"): 2, ("fail", "fail"): 8})
     j = [r.judge.verdict for r in d]
     h = [r.human.label for r in d]
@@ -169,7 +170,8 @@ def test_kappa_matches_sklearn():
 
 
 def test_confusion_matches_sklearn():
-    metrics = pytest.importorskip("sklearn.metrics")
+    from sklearn import metrics
+
     d = make(TEXTBOOK)
     j = [r.judge.verdict for r in d]
     h = [r.human.label for r in d]
