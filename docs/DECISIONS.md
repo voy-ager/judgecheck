@@ -16,3 +16,4 @@
 | D12 | 2026-11-20 | scikit-learn as dev-only test dependency for comparing agreement stats | Brief requires sklearn comparisons; never shipped; pip-audit covers it |
 | D13 | 2026-11-20 | Agreement stats behaviour: kappa NaN when undefined (0/0, matches sklearn); empty input -> NaN, not an error; kappa excludes failed records but the report always shows the failed count beside it, while percent agreement and bootstrap CI count failed as wrong; pure Python, no numpy at runtime | Agreed with the test-first PR #43 |
 | D14 | 2026-11-20 | D6 gate also fails when more than 10% of judge results failed (status=failed / all results); the 10% becomes a setting in P3 | Kappa excludes failed records (D13), so without this a judge failing most items could pass on its few good ones |
+| D15 | 2026-11-20 | No new JudgeRecord field; `status=failed` with fixed reason codes in `adapters/base.py` | Maintainer choice 2026-11-20, smallest change |

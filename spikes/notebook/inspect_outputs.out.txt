@@ -3,59 +3,60 @@ golden items: 30; labels: 30; unlabelled: 0
 == deepeval-llama3.2_latest ==
 records: 30 (30 ok, 0 failed)
 ids not in golden items: 0; golden items without record: 0
-join vs human labels: matched 30, records without label 0, labels without record 0
+join vs human labels: matched 30, failed 0, records without label 0, labels without record 0
 
 == deepeval-qwen2.5-coder_3b ==
 records: 30 (30 ok, 0 failed)
 ids not in golden items: 0; golden items without record: 0
-join vs human labels: matched 30, records without label 0, labels without record 0
+join vs human labels: matched 30, failed 0, records without label 0, labels without record 0
 
 == deepeval-qwen2.5_7b ==
-records: 30 (30 ok, 0 failed)
+records: 30 (29 ok, 1 failed)
+  failed g028: zero_claims_default: no claims extracted, framework default score
 ids not in golden items: 0; golden items without record: 0
-join vs human labels: matched 30, records without label 0, labels without record 0
+join vs human labels: matched 29, failed 1, records without label 0, labels without record 0
 
 == ragas-llama3.2_latest ==
 records: 30 (0 ok, 30 failed)
-  failed g001: NaN score (framework error or no statements)
-  failed g002: NaN score (framework error or no statements)
-  failed g003: NaN score (framework error or no statements)
-  failed g004: NaN score (framework error or no statements)
-  failed g005: NaN score (framework error or no statements)
-  failed g006: NaN score (framework error or no statements)
-  failed g007: NaN score (framework error or no statements)
-  failed g008: NaN score (framework error or no statements)
-  failed g009: NaN score (framework error or no statements)
-  failed g010: NaN score (framework error or no statements)
-  failed g011: NaN score (framework error or no statements)
-  failed g012: NaN score (framework error or no statements)
-  failed g013: NaN score (framework error or no statements)
-  failed g014: NaN score (framework error or no statements)
-  failed g015: NaN score (framework error or no statements)
-  failed g016: NaN score (framework error or no statements)
-  failed g017: NaN score (framework error or no statements)
-  failed g018: NaN score (framework error or no statements)
-  failed g019: NaN score (framework error or no statements)
-  failed g020: NaN score (framework error or no statements)
-  failed g021: NaN score (framework error or no statements)
-  failed g022: NaN score (framework error or no statements)
-  failed g023: NaN score (framework error or no statements)
-  failed g024: NaN score (framework error or no statements)
-  failed g025: NaN score (framework error or no statements)
-  failed g026: NaN score (framework error or no statements)
-  failed g027: NaN score (framework error or no statements)
-  failed g028: NaN score (framework error or no statements)
-  failed g029: NaN score (framework error or no statements)
-  failed g030: NaN score (framework error or no statements)
+  failed g001: schema_echo: judge echoed the JSON schema
+  failed g002: schema_echo: judge echoed the JSON schema
+  failed g003: schema_echo: judge echoed the JSON schema
+  failed g004: schema_echo: judge echoed the JSON schema
+  failed g005: schema_echo: judge echoed the JSON schema
+  failed g006: schema_echo: judge echoed the JSON schema
+  failed g007: schema_echo: judge echoed the JSON schema
+  failed g008: schema_echo: judge echoed the JSON schema
+  failed g009: schema_echo: judge echoed the JSON schema
+  failed g010: schema_echo: judge echoed the JSON schema
+  failed g011: schema_echo: judge echoed the JSON schema
+  failed g012: schema_echo: judge echoed the JSON schema
+  failed g013: schema_echo: judge echoed the JSON schema
+  failed g014: schema_echo: judge echoed the JSON schema
+  failed g015: schema_echo: judge echoed the JSON schema
+  failed g016: schema_echo: judge echoed the JSON schema
+  failed g017: schema_echo: judge echoed the JSON schema
+  failed g018: schema_echo: judge echoed the JSON schema
+  failed g019: schema_echo: judge echoed the JSON schema
+  failed g020: schema_echo: judge echoed the JSON schema
+  failed g021: schema_echo: judge echoed the JSON schema
+  failed g022: schema_echo: judge echoed the JSON schema
+  failed g023: schema_echo: judge echoed the JSON schema
+  failed g024: schema_echo: judge echoed the JSON schema
+  failed g025: schema_echo: judge echoed the JSON schema
+  failed g026: schema_echo: judge echoed the JSON schema
+  failed g027: schema_echo: judge echoed the JSON schema
+  failed g028: schema_echo: judge echoed the JSON schema
+  failed g029: schema_echo: judge echoed the JSON schema
+  failed g030: schema_echo: judge echoed the JSON schema
 ids not in golden items: 0; golden items without record: 0
-join vs human labels: matched 30, records without label 0, labels without record 0
+join vs human labels: matched 0, failed 30, records without label 0, labels without record 0
 
 == ragas-qwen2.5-coder_3b ==
 records: 30 (30 ok, 0 failed)
 ids not in golden items: 0; golden items without record: 0
-join vs human labels: matched 30, records without label 0, labels without record 0
+join vs human labels: matched 30, failed 0, records without label 0, labels without record 0
 
 == ragas-qwen2.5_7b ==
 records: 30 (30 ok, 0 failed)
 ids not in golden items: 0; golden items without record: 0
-join vs human labels: matched 30, records without label 0, labels without record 0
+join vs human labels: matched 30, failed 0, records without label 0, labels without record 0

@@ -7,11 +7,15 @@ from pathlib import Path
 from typing import Any
 
 from judgecheck.adapters.base import (
+    BAD_CONTEXTS,
     MISSING_REASON,
+    NAN_REASON,
+    classify_nan,
     load_raw_calls,
     match_raw_outputs,
     require_id,
     score_or_failure,
+    with_code,
 )
 from judgecheck.models import JudgeRecord, Verdict
 
@@ -80,9 +84,19 @@ def read_ragas(
                 framework="ragas",
                 metric=metric,
                 status="failed",
-                failure_reason="retrieved_contexts is not a list",
+                failure_reason=with_code(BAD_CONTEXTS, "retrieved_contexts is not a list"),
             )
             ctx = []
         needles[e] = [str(r.get("response") or ""), *ctx]
     raw = match_raw_outputs(needles, load_raw_calls(raw_calls))
-    return [r.model_copy(update={"raw_output": raw.get(r.example_id)}) for r in records]
+    return [
+        r.model_copy(
+            update={
+                "raw_output": raw.get(r.example_id),
+                "failure_reason": classify_nan(raw.get(r.example_id))
+                if r.failure_reason == NAN_REASON
+                else r.failure_reason,
+            }
+        )
+        for r in records
+    ]

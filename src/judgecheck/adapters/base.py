@@ -5,8 +5,37 @@ import math
 from pathlib import Path
 from typing import Any
 
-NAN_REASON = "NaN score (framework error or no statements)"
-MISSING_REASON = "missing score field"
+# D11: fixed reason codes for status="failed"; a reason is "<code>: <detail>".
+ZERO_CLAIMS_DEFAULT = "zero_claims_default"  # no claims extracted, framework default score
+FRAMEWORK_ERROR = "framework_error"  # NaN score, cause not visible
+NO_STATEMENTS = "no_statements"  # Ragas found nothing to check
+SCHEMA_ECHO = "schema_echo"  # judge echoed the JSON schema instead of answering
+MISSING_SUCCESS = "missing_success"
+SKIPPED = "skipped"  # test case has no metric result
+MISSING_REASON = "missing_score: no score field"
+NULL_SCORE = "null_score"
+NON_NUMERIC_SCORE = "non_numeric_score"
+OUT_OF_RANGE_SCORE = "out_of_range_score"
+BAD_CONTEXTS = "bad_contexts"
+FRAMEWORK_ERROR_FIELD = "deepeval_error"  # the framework's own error text, kept as detail
+NAN_REASON = f"{FRAMEWORK_ERROR}: NaN score"
+
+
+def with_code(code: str, detail: str) -> str:
+    return f"{code}: {detail}"
+
+
+def classify_nan(raw: str | None) -> str:
+    """Refine a NaN failure reason from the raw judge output, when it is attached."""
+    raw = raw or ""
+    if any('"properties"' in part[:40] for part in raw.split("\n---\n")):
+        return with_code(SCHEMA_ECHO, "judge echoed the JSON schema")
+    try:  # the first call is the statement extraction; later calls are not about it
+        if json.loads(raw.split("\n---\n")[0]).get("statements") == []:
+            return with_code(NO_STATEMENTS, "no statements to check")
+    except (ValueError, AttributeError):
+        pass
+    return NAN_REASON
 
 
 def score_or_failure(raw: object) -> tuple[float | None, str | None]:
@@ -14,15 +43,15 @@ def score_or_failure(raw: object) -> tuple[float | None, str | None]:
     if raw is None or (isinstance(raw, str) and raw.strip().lower() in {"", "nan"}):
         return None, NAN_REASON
     if isinstance(raw, bool):  # float(True) == 1.0 would pass a bad export as a real score
-        return None, f"non-numeric score: {raw!r}"
+        return None, with_code(NON_NUMERIC_SCORE, repr(raw))
     try:
         score = float(raw)  # type: ignore[arg-type]
     except (TypeError, ValueError):
-        return None, f"non-numeric score: {raw!r}"
+        return None, with_code(NON_NUMERIC_SCORE, repr(raw))
     if math.isnan(score):
         return None, NAN_REASON
     if not 0.0 <= score <= 1.0:
-        return None, f"out-of-range score: {score}"
+        return None, with_code(OUT_OF_RANGE_SCORE, str(score))
     return score, None
 
 
