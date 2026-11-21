@@ -6,6 +6,16 @@ from judgecheck.join import join, load_labels
 from judgecheck.models import HumanLabel, JudgeRecord
 
 
+def failed(eid: str) -> JudgeRecord:
+    return JudgeRecord(
+        example_id=eid,
+        framework="ragas",
+        metric="faithfulness",
+        status="failed",
+        failure_reason="NaN",
+    )
+
+
 def rec(eid: str) -> JudgeRecord:
     return JudgeRecord(
         example_id=eid,
@@ -25,6 +35,13 @@ def test_join_reports_both_sides() -> None:
     res = join([rec("a"), rec("b")], [lab("b"), lab("c")])
     assert [j.judge.example_id for j in res.joined] == ["b"]
     assert res.missing_labels == ["a"] and res.missing_judgements == ["c"]
+
+
+def test_join_keeps_failed_records_out_of_joined() -> None:
+    res = join([rec("a"), failed("b"), failed("c")], [lab("a"), lab("b")])
+    assert [j.judge.example_id for j in res.joined] == ["a"]
+    assert [j.judge.example_id for j in res.failed] == ["b"]
+    assert res.missing_labels == ["c"]
 
 
 def test_join_rejects_duplicates() -> None:
@@ -53,3 +70,12 @@ def test_load_labels_invalid_and_duplicate(tmp_path: Path) -> None:
     p.write_text("example_id,label\na,pass\na,fail\n", "utf-8")
     with pytest.raises(ValueError, match="duplicate"):
         load_labels(p)
+
+
+def test_load_labels_duplicate_across_unlabelled_and_blank_ids(tmp_path: Path) -> None:
+    p = tmp_path / "l.csv"
+    p.write_text("example_id,label\na,pass\na,\n", "utf-8")
+    with pytest.raises(ValueError, match="duplicate"):
+        load_labels(p)
+    p.write_text("example_id,label\n,\n,\nb,\n", "utf-8")
+    assert load_labels(p).unlabelled == ["b"]

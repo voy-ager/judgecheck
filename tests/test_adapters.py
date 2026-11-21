@@ -97,6 +97,16 @@ def test_deepeval_missing_and_null_score(tmp_path: Path) -> None:
     assert recs[2].status == "failed" and "out-of-range" in (recs[2].failure_reason or "")
 
 
+def test_deepeval_missing_or_null_success_is_failed(tmp_path: Path) -> None:
+    rows = [
+        de_row({"name": "Faithfulness", "score": 1.0}, "a"),
+        de_row({"name": "Faithfulness", "score": 1.0, "success": None}, "b"),
+    ]
+    recs = read_deepeval(write(tmp_path, "d.json", {"test_results": rows}))
+    assert all(r.status == "failed" and r.verdict is None for r in recs)
+    assert all("success" in (r.failure_reason or "") for r in recs)
+
+
 def test_deepeval_skipped_row_and_index_id(tmp_path: Path) -> None:
     rows = [
         {"index": 4, "metrics_data": [{"score": 1.0, "success": True}]},
@@ -108,8 +118,8 @@ def test_deepeval_skipped_row_and_index_id(tmp_path: Path) -> None:
 
 def test_ambiguous_raw_call_attached_to_none(tmp_path: Path) -> None:
     rows = [
-        de_row({"name": "F", "score": 1.0, "success": True}, "a"),
-        de_row({"name": "F", "score": 1.0, "success": True}, "b"),
+        de_row({"name": "Faithfulness", "score": 1.0, "success": True}, "a"),
+        de_row({"name": "Faithfulness", "score": 1.0, "success": True}, "b"),
     ]
     call = {
         "request": {"messages": [{"content": "has a and c"}]},
@@ -126,6 +136,7 @@ def test_base_helpers(tmp_path: Path) -> None:
     assert load_raw_calls(None) == []
     assert score_or_failure(0.25) == (0.25, None)
     assert score_or_failure(float("nan"))[1] == NAN
+    assert score_or_failure(True) == (None, "non-numeric score: True")
 
 
 def test_missing_id_is_error_by_default(tmp_path: Path) -> None:
@@ -146,7 +157,7 @@ def test_raw_call_example_id_field_wins(tmp_path: Path) -> None:
             c["example_id"] = eid
         return json.dumps(c)
 
-    md = {"name": "F", "score": 1.0, "success": True}
+    md = {"name": "Faithfulness", "score": 1.0, "success": True}
     rows = [de_row(md, "a"), de_row(md, "b")]
     rows[0]["actual_output"], rows[1]["actual_output"] = "ans-a", "ans-b"
     lines = [
@@ -157,3 +168,35 @@ def test_raw_call_example_id_field_wins(tmp_path: Path) -> None:
     raw = write(tmp_path, "raw.jsonl", "\n".join(lines))
     recs = read_deepeval(write(tmp_path, "d.json", {"test_results": rows}), raw)
     assert recs[0].raw_output == "R-a" and recs[1].raw_output == "R-b"
+
+
+def test_raw_response_shapes_null_request_and_int_ids(tmp_path: Path) -> None:
+    calls = [
+        {"example_id": 1, "request": None, "response": {"message": {"content": "native"}}},
+        {"example_id": 1, "response": {"choices": [{"message": {"content": "openai"}}]}},
+        {"example_id": 1, "response": "not json body"},
+    ]
+    raw = write(tmp_path, "raw.jsonl", "\n".join(json.dumps(c) for c in calls))
+    md = {"name": "Faithfulness", "score": 1.0, "success": True}
+    recs = read_deepeval(write(tmp_path, "d.json", {"test_results": [de_row(md, "1")]}), raw)
+    assert recs[0].raw_output == "native\n---\nopenai\n---\n"
+
+
+def test_deepeval_metric_filter(tmp_path: Path) -> None:
+    other = {"name": "Relevancy", "score": 0.1, "success": False}
+    good = {"name": "Faithfulness", "score": 1.0, "success": True}
+    row = de_row(good, "a")
+    row["metrics_data"].append(other)
+    p = write(tmp_path, "d.json", {"test_results": [row]})
+    assert [r.metric for r in read_deepeval(p)] == ["faithfulness"]
+    assert [r.metric for r in read_deepeval(p, metric="relevancy")] == ["relevancy"]
+
+
+def test_ragas_contexts_not_a_list_is_failed(tmp_path: Path) -> None:
+    rows = [
+        {"response": "x", "retrieved_contexts": "5", "faithfulness": 1.0},
+        {"response": "y", "retrieved_contexts": "['c']", "faithfulness": 1.0},
+    ]
+    recs = read_ragas(write(tmp_path, "r.json", rows), allow_index_ids=True)
+    assert recs[0].status == "failed" and "retrieved_contexts" in (recs[0].failure_reason or "")
+    assert recs[1].status == "ok"
