@@ -13,6 +13,8 @@ The judge did run and returned a score (DeepEval 0.33 on g005), so the record is
 flagging it in `detect` would hide that the golden item itself is bad. Maintainer to confirm.
 """
 
+import json
+from pathlib import Path
 from typing import Literal
 
 import pytest
@@ -168,3 +170,26 @@ def test_clean_items_have_no_data_quality_findings() -> None:
     assert (
         fl.data_quality([item("a"), item("b", answer="I'm not sure, please check the docs.")]) == []
     )
+
+
+def test_missing_score_reason_is_detected() -> None:
+    # MISSING_REASON is a full reason ("missing_score: no score field"), emitted by both adapters.
+    rec = JudgeRecord(
+        example_id="g1",
+        framework="deepeval",
+        metric="faithfulness",
+        status="failed",
+        failure_reason=base.MISSING_REASON,
+    )
+    (f,) = fl.detect([ok("g2"), rec])
+    assert (f.code, f.example_id) == ("missing_score", "g1")
+    assert "no score field" in f.detail
+
+
+def test_data_quality_on_real_golden_v0_finds_only_g005() -> None:
+    path = Path(__file__).parents[1] / "data" / "golden" / "v0" / "items.json"
+    items = json.loads(path.read_text("utf-8"))
+    items = items if isinstance(items, list) else items["items"]
+    assert len(items) == 30
+    (f,) = fl.data_quality(items)
+    assert (f.code, f.example_id) == ("blank_answer", "g005")
