@@ -18,7 +18,7 @@ from judgecheck.adapters.base import (
     score_or_failure,
     with_code,
 )
-from judgecheck.models import JudgeRecord
+from judgecheck.models import JudgeRecord, Verdict
 
 EMPTY_LIST_LOG = re.compile(r"(?m)^(Claims|Verdicts):\n\[\][ 	]*$")
 
@@ -39,16 +39,20 @@ def _failure(md: dict[str, Any]) -> tuple[float | None, str | None]:
     return score, reason
 
 
-def _record(example_id: str, md: dict[str, Any]) -> JudgeRecord:
+def _record(example_id: str, md: dict[str, Any], threshold: float | None) -> JudgeRecord:
     score, reason = _failure(md)
     failed = reason is not None
+    verdict: Verdict | None = None
+    if score is not None and not failed:
+        passed = md["success"] if threshold is None else score >= threshold
+        verdict = "pass" if passed else "fail"
     return JudgeRecord(
         example_id=example_id,
         framework="deepeval",
         metric=str(md.get("name", "faithfulness")).lower(),
         score=score,
-        verdict=None if failed else ("pass" if md["success"] else "fail"),
-        threshold=md.get("threshold"),
+        verdict=verdict,
+        threshold=md.get("threshold") if threshold is None else threshold,
         reason=md.get("reason"),
         status="failed" if failed else "ok",
         failure_reason=reason,
@@ -70,10 +74,13 @@ def read_deepeval(
     raw_calls: Path | None = None,
     allow_index_ids: bool = False,
     metric: str = "faithfulness",
+    threshold: float | None = None,
 ) -> list[JudgeRecord]:
     """Parse a DeepEval JSON export. example_id is the test case `name`.
 
     A test case without a name is an error unless `allow_index_ids` (then its index is used).
+
+    `threshold` recomputes the verdict from the score; default keeps DeepEval's `success`.
 
     Only `metric` entries are read, so a multi-metric export gives one record per id.
     Test cases with no `metrics_data` (skipped rows) yield a failed record (D11).
@@ -88,7 +95,7 @@ def read_deepeval(
         if not mds:  # D11: a skipped test case is a failed record, not a missing one
             records.append(_skipped(eid, metric))
         records.extend(
-            _record(eid, md)
+            _record(eid, md, threshold)
             for md in mds
             if str(md.get("name", "faithfulness")).lower() == metric.lower()
         )

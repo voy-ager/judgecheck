@@ -19,6 +19,9 @@ from judgecheck.adapters.base import (
 )
 from judgecheck.models import JudgeRecord, Verdict
 
+# D7 (provisional until P5): Ragas faithfulness passes only at a perfect score.
+RAGAS_PASS_THRESHOLD = 1.0
+
 
 def _load_rows(path: Path) -> list[dict[str, Any]]:
     if path.suffix.lower() == ".json":
@@ -40,10 +43,10 @@ def _contexts(row: dict[str, Any]) -> list[str] | None:
     return [str(c) for c in ctx or []]
 
 
-def _record(eid: str, row: dict[str, Any], metric: str, threshold: float | None) -> JudgeRecord:
+def _record(eid: str, row: dict[str, Any], metric: str, threshold: float) -> JudgeRecord:
     score, reason = (None, MISSING_REASON) if metric not in row else score_or_failure(row[metric])
     verdict: Verdict | None = None
-    if score is not None and threshold is not None:
+    if score is not None:
         verdict = "pass" if score >= threshold else "fail"
     return JudgeRecord(
         example_id=eid,
@@ -61,14 +64,14 @@ def read_ragas(
     path: Path,
     raw_calls: Path | None = None,
     metric: str = "faithfulness",
-    threshold: float | None = None,
+    threshold: float = RAGAS_PASS_THRESHOLD,
     allow_index_ids: bool = False,
 ) -> list[JudgeRecord]:
     """Parse a Ragas CSV/JSON export. example_id is the `example_id` column.
 
     A row without one is an error unless `allow_index_ids` (then the row index is used).
 
-    Ragas has no pass/fail threshold; verdict is set only when `threshold` is given.
+    Ragas has no pass/fail threshold; verdict is `pass` when score >= `threshold` (default: D7).
     """
     rows = _load_rows(path)
     ids = [

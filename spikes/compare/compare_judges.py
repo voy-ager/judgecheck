@@ -103,7 +103,7 @@ def main() -> None:
             note = f" (all {n} failed)" if not scored else ""
             print("  by pass threshold (score >= t; failed counted wrong):")
             for th in (0.5, 0.7, 1.0):
-                v = {i: "pass" if recs[i].score >= th - 1e-9 else "fail" for i in scored}  # type: ignore[operator]
+                v = {i: "pass" if recs[i].score >= th else "fail" for i in scored}  # type: ignore[operator]
                 g = sum(v[i] == human[i] for i in scored)
                 tfp = [i for i in scored if v[i] == "pass" and human[i] == "fail"]
                 tff = [i for i in scored if v[i] == "fail" and human[i] == "pass"]
