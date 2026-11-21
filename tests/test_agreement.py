@@ -18,8 +18,12 @@ from judgecheck.checks import agreement as ag
 from judgecheck.models import HumanLabel, JoinedRecord, JudgeRecord
 
 # Stays green until the maintainer implements the module; XPASS is allowed (strict=False).
+# Conditional: once the functions exist, any error (even AttributeError) fails loudly.
+_NAMES = ("percent_agreement", "cohens_kappa", "confusion_matrix", "bootstrap_ci")
 pytestmark = pytest.mark.xfail(
-    strict=False, reason="awaiting maintainer implementation, #41", raises=AttributeError
+    not all(hasattr(ag, n) for n in _NAMES),
+    strict=False,
+    reason="awaiting maintainer implementation, #41",
 )
 
 
@@ -84,6 +88,15 @@ def test_textbook_kappa():
     assert ag.cohens_kappa(d) == pytest.approx(0.4)
 
 
+def test_kappa_unbalanced_2x2():
+    # Unbalanced margins, so a wrong formula such as 2*po-1 (=.7) fails. n=20:
+    # 12 both pass, 2 judge pass/human fail, 1 judge fail/human pass, 5 both fail.
+    d = make({("pass", "pass"): 12, ("pass", "fail"): 2, ("fail", "pass"): 1, ("fail", "fail"): 5})
+    # po=17/20=.85; judge pass=14, human pass=13; pe=(14*13+6*7)/400=224/400=.56
+    # kappa=(.85-.56)/(1-.56)=.29/.44=.659
+    assert ag.cohens_kappa(d) == pytest.approx(0.29 / 0.44)
+
+
 def test_kappa_one_constant_rater_is_zero():
     d = make({("pass", "pass"): 2, ("pass", "fail"): 2})  # judge always pass
     # po=.5; pe=1*.5+0*.5=.5 -> kappa=0 (agreement no better than chance)
@@ -146,6 +159,20 @@ def test_bootstrap_width_shrinks_with_n():
     assert w(big) < w(small)
 
 
+def test_bootstrap_width_rough_at_n200():
+    d = make({("pass", "pass"): 160, ("pass", "fail"): 40})  # p=.8
+    lo, hi = _ci(d, seed=1)
+    # normal approx: 2*1.96*sqrt(.8*.2/200)=.11
+    assert 0.07 < hi - lo < 0.15
+
+
+def test_bootstrap_alpha_widens_interval():
+    d = make({("pass", "pass"): 16, ("pass", "fail"): 4})
+    lo5, hi5 = _ci(d, seed=1, alpha=0.05)
+    lo20, hi20 = _ci(d, seed=1, alpha=0.20)
+    assert hi5 - lo5 > hi20 - lo20
+
+
 def test_bootstrap_counts_failures_as_wrong():
     d = make({("pass", "pass"): 5})
     assert _ci(d, seed=1) == (1.0, 1.0)  # no variance without failures
@@ -164,6 +191,15 @@ def test_kappa_matches_sklearn():
     from sklearn import metrics
 
     d = make({("pass", "pass"): 7, ("pass", "fail"): 3, ("fail", "pass"): 2, ("fail", "fail"): 8})
+    j = [r.judge.verdict for r in d]
+    h = [r.human.label for r in d]
+    assert ag.cohens_kappa(d) == pytest.approx(metrics.cohen_kappa_score(h, j))
+
+
+def test_kappa_matches_sklearn_unbalanced():
+    from sklearn import metrics
+
+    d = make({("pass", "pass"): 12, ("pass", "fail"): 2, ("fail", "pass"): 1, ("fail", "fail"): 5})
     j = [r.judge.verdict for r in d]
     h = [r.human.label for r in d]
     assert ag.cohens_kappa(d) == pytest.approx(metrics.cohen_kappa_score(h, j))
