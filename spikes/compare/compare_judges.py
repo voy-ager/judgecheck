@@ -8,10 +8,11 @@ Ragas has no pass threshold, so 0.5 is used to match DeepEval (our assumption).
 Wall time: meta.json has no duration field, so it is meta timestamp (run end) minus
 the first raw call timestamp (approximate; excludes the first call's own latency).
 
-Caveats: "unjudged" = DeepEval extracted zero claims, skipped the verdict call and returned
-its default score 1.0 with status ok; these are shown counted and excluded. Cross-framework
-comparison mixes judge quality with format enforcement (DeepEval enforces the output schema,
-Ragas does not); the within-framework comparison across models is the fair one.
+Caveats: "unjudged" = DeepEval extracted zero claims and skipped the verdict call; the adapter
+marks these failed (zero_claims_default, D11), so they are counted wrong, not
+excluded. Cross-framework comparison mixes judge quality with format enforcement
+(DeepEval enforces the output schema, Ragas does not);
+the within-framework comparison across models is the fair one.
 
 Threshold 1.0 matches the labelling rule (pass = every claim supported) but was chosen after
 seeing these data; confirm on fresh labelled items (P5).
@@ -32,6 +33,7 @@ ROOT = Path(__file__).resolve().parents[2]
 OUT = ROOT / "spikes" / "generate" / "out"
 GOLD = ROOT / "data" / "golden" / "v0"
 RAGAS_THRESHOLD = 0.5
+ZERO = "zero_claims_default"
 MODELS = ["llama3.2_latest", "qwen2.5-coder_3b", "qwen2.5_7b"]
 
 
@@ -46,17 +48,6 @@ def load(fw: str, run: Path) -> list[JudgeRecord]:
     if fw == "deepeval":
         return read_deepeval(run / "native_deepeval.json", raw)
     return read_ragas(run / "native_ragas.json", raw, threshold=RAGAS_THRESHOLD)
-
-
-def unjudged(run: Path) -> set[str]:
-    """DeepEval items whose verbose log shows an empty claims list (no verdict call made)."""
-    data = json.loads((run / "native_deepeval.json").read_text("utf-8"))
-    return {
-        t["name"]
-        for t in data["test_results"]
-        if t.get("metrics_data")  # skipped rows have none
-        and "Claims:\n[]" in (t["metrics_data"][0].get("verboseLogs") or "")
-    }
 
 
 def echoed_schema(run: Path) -> tuple[int, int]:
@@ -104,11 +95,8 @@ def main() -> None:
             )
             print(f"agreement, failed=wrong: {(s - len(wrong)) / n:.0%} ({s - len(wrong)}/{n})")
             if fw == "deepeval":
-                uj = sorted(unjudged(run) & set(scored))
-                ok = [i for i in scored if i not in uj]
-                good = sum(recs[i].verdict == human[i] for i in ok)
+                uj = sorted(i for i, r in recs.items() if (r.failure_reason or "").startswith(ZERO))
                 print(f"unjudged (zero claims, default score): {len(uj)} {uj}")
-                print(f"agreement excluding unjudged: {good / len(ok):.0%} ({good}/{len(ok)})")
             if failed and fw == "ragas":
                 e, t = echoed_schema(run)
                 print(f"  real cause: judge echoed the JSON schema in {e}/{t} calls (retried)")

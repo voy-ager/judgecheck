@@ -1,0 +1,17 @@
+{
+ "test_results": [
+  {
+   "name": "g028",
+   "metrics_data": [
+    {
+     "name": "Faithfulness",
+     "threshold": 0.5,
+     "success": true,
+     "score": 1.0,
+     "error": null,
+     "verboseLogs": "Truths (limit=None):\n[\n    \"Refund requests must be made within 30 days of purchase.\"\n] \n \nClaims:\n[] \n \nVerdicts:\n[]"
+    }
+   ]
+  }
+ ]
+}

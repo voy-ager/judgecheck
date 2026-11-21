@@ -11,7 +11,6 @@ scored 30/30, failed/NaN 0
 agreement on scored: 67% (20/30)
 agreement, failed=wrong: 67% (20/30)
 unjudged (zero claims, default score): 0 []
-agreement excluding unjudged: 67% (20/30)
   by pass threshold (score >= t; failed counted wrong):
     t=0.5: agree 67% (20/30), false pass 5, false fail 5
     t=0.7: agree 70% (21/30), false pass 3, false fail 6
@@ -26,7 +25,6 @@ scored 30/30, failed/NaN 0
 agreement on scored: 67% (20/30)
 agreement, failed=wrong: 67% (20/30)
 unjudged (zero claims, default score): 0 []
-agreement excluding unjudged: 67% (20/30)
   by pass threshold (score >= t; failed counted wrong):
     t=0.5: agree 67% (20/30), false pass 5, false fail 5
     t=0.7: agree 70% (21/30), false pass 4, false fail 5
@@ -41,8 +39,7 @@ scored 29/30, failed/NaN 1
   failed 1x (zero_claims_default: no claims extracted, framework default score): ['g028']
 agreement on scored: 62% (18/29)
 agreement, failed=wrong: 60% (18/30)
-unjudged (zero claims, default score): 0 []
-agreement excluding unjudged: 62% (18/29)
+unjudged (zero claims, default score): 1 ['g028']
   by pass threshold (score >= t; failed counted wrong):
     t=0.5: agree 60% (18/30), false pass 8, false fail 3
     t=0.7: agree 70% (21/30), false pass 5, false fail 3

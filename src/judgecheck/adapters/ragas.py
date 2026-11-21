@@ -7,6 +7,7 @@ from pathlib import Path
 from typing import Any
 
 from judgecheck.adapters.base import (
+    BAD_CONTEXTS,
     MISSING_REASON,
     NAN_REASON,
     classify_nan,
@@ -14,6 +15,7 @@ from judgecheck.adapters.base import (
     match_raw_outputs,
     require_id,
     score_or_failure,
+    with_code,
 )
 from judgecheck.models import JudgeRecord, Verdict
 
@@ -82,7 +84,7 @@ def read_ragas(
                 framework="ragas",
                 metric=metric,
                 status="failed",
-                failure_reason="retrieved_contexts is not a list",
+                failure_reason=with_code(BAD_CONTEXTS, "retrieved_contexts is not a list"),
             )
             ctx = []
         needles[e] = [str(r.get("response") or ""), *ctx]

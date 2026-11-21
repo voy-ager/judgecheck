@@ -1,12 +1,15 @@
 """DeepEval results adapter: native `test_results` JSON to JudgeRecord."""
 
 import json
+import re
 from pathlib import Path
 from typing import Any
 
 from judgecheck.adapters.base import (
+    FRAMEWORK_ERROR_FIELD,
     MISSING_REASON,
     MISSING_SUCCESS,
+    NULL_SCORE,
     SKIPPED,
     ZERO_CLAIMS_DEFAULT,
     load_raw_calls,
@@ -17,19 +20,21 @@ from judgecheck.adapters.base import (
 )
 from judgecheck.models import JudgeRecord
 
+EMPTY_LIST_LOG = re.compile(r"(?m)^(Claims|Verdicts):\n\[\][ 	]*$")
+
 
 def _failure(md: dict[str, Any]) -> tuple[float | None, str | None]:
     if md.get("error"):
-        return None, str(md["error"])
+        return None, with_code(FRAMEWORK_ERROR_FIELD, str(md["error"]))
     if "score" not in md:
         return None, MISSING_REASON
     if md["score"] is None:
-        return None, "score is null"
+        return None, with_code(NULL_SCORE, "score is null")
     score, reason = score_or_failure(md["score"])
     if reason is None and not isinstance(md.get("success"), bool):
         return None, with_code(MISSING_SUCCESS, "no boolean success field")
     logs = md.get("verboseLogs") or ""
-    if reason is None and ("Claims:\n[]" in logs or "Verdicts:\n[]" in logs):
+    if reason is None and EMPTY_LIST_LOG.search(logs):
         return None, with_code(ZERO_CLAIMS_DEFAULT, "no claims extracted, framework default score")
     return score, reason
 
