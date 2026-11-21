@@ -187,13 +187,14 @@ def test_missing_score_reason_is_detected() -> None:
     assert "no score field" in f.detail
 
 
-def test_data_quality_on_real_golden_v0_finds_only_g005() -> None:
+def test_data_quality_on_real_golden_v0_finds_g005_and_g027() -> None:
+    # g005 has a blank answer; g027 has an empty context list (answer supported by nothing).
     path = Path(__file__).parents[1] / "data" / "golden" / "v0" / "items.json"
     items = json.loads(path.read_text("utf-8"))
     items = items if isinstance(items, list) else items["items"]
     assert len(items) == 30
-    (f,) = fl.data_quality(items)
-    assert (f.code, f.example_id) == ("blank_answer", "g005")
+    found = [(f.code, f.example_id) for f in fl.data_quality(items)]
+    assert found == [("blank_answer", "g005"), ("empty_context", "g027")]
 
 
 def test_detail_quoting_another_code_keeps_its_own_code() -> None:
