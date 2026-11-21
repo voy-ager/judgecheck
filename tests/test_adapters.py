@@ -33,8 +33,22 @@ def test_pilot_ragas(name: str) -> None:
     assert all(r.raw_output for r in recs)
 
 
-def test_ragas_no_threshold_means_no_verdict() -> None:
-    assert all(r.verdict is None for r in read_ragas(FX / "ragas.csv", allow_index_ids=True))
+def test_ragas_default_is_d7_pass_only_at_one(tmp_path: Path) -> None:
+    p = write(tmp_path, "r.json", [{"faithfulness": 1.0}, {"faithfulness": 0.99}])
+    recs = read_ragas(p, allow_index_ids=True)
+    assert [r.verdict for r in recs] == ["pass", "fail"] and recs[0].threshold == 1.0
+    assert read_ragas(p, threshold=0.5, allow_index_ids=True)[1].verdict == "pass"
+
+
+def test_deepeval_threshold_override(tmp_path: Path) -> None:
+    md = {"name": "Faithfulness", "score": 0.7, "success": True, "threshold": 0.5}
+    p = write(tmp_path, "d.json", {"test_results": [de_row(md)]})
+    assert read_deepeval(p)[0].verdict == "pass"
+    rec = read_deepeval(p, threshold=1.0)[0]
+    assert rec.verdict == "fail" and rec.threshold == 1.0
+    err = de_row({"name": "Faithfulness", "error": "x"})
+    bad = write(tmp_path, "e.json", {"test_results": [err]})
+    assert read_deepeval(bad, threshold=1.0)[0].verdict is None
 
 
 def write(tmp_path: Path, name: str, obj: Any) -> Path:
