@@ -252,6 +252,7 @@ def main() -> None:
     p.add_argument("--framework", choices=["deepeval", "ragas", "both"], required=True)
     p.add_argument("--deepeval-client", choices=["native", "openai-compat"], default="native")
     p.add_argument("--limit", type=int, default=None, help="use only the first N items")
+    p.add_argument("--out-root", type=Path, default=HERE / "out", help="parent of the output dir")
     args = p.parse_args()
     _selfcheck()
     if args.framework == "both":  # one process per framework: DeepEval leaves Ragas hanging
@@ -267,7 +268,7 @@ def main() -> None:
         "ragas": run_ragas,
     }
     for fw in (args.framework,):
-        out = HERE / "out" / f"{fw}-{slug}"
+        out = args.out_root / f"{fw}-{slug}"
         out.mkdir(parents=True, exist_ok=True)
         rec = Recorder(out / "raw_calls.jsonl")
         runners[fw](items, args.model, out, rec)
